@@ -1,0 +1,70 @@
+﻿public class Libro : Catalogo
+{
+    private string? _iSBN;
+    private int _numeroDePaginas;
+    private string? _editorial;
+    private string? _estadoFisico;
+
+    public string? ISBN
+    {
+        get => _iSBN;
+        private set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("El ISBN no puede estar vacío");
+            }
+            if (value.Length != 13)
+            {
+                throw new ArgumentException("El ISBN Debe contener exactamente 13 digitos");
+            }
+            _iSBN = value;
+        }
+    }
+    public int NumeroDePaginas
+    {
+        get => _numeroDePaginas;
+        private set
+        {
+            if (value < 0)
+                throw new ArgumentException("La cantidad de paginas no puede ser negativa");
+            _numeroDePaginas = value;
+        }
+    }
+    public string? Editorial
+    {
+        get => _editorial;
+        private set => _editorial = ValidarTexto(value, "editorial");
+    }
+    public string? EstadoFisico
+    {
+        get => _estadoFisico;
+        private set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("El estado no puede estar vacío");
+            if (value != "Bueno" && value != "Regular" && value != "Deteriorado")
+                throw new ArgumentException("El estado solo puede ser: 'Bueno' , 'Regular' o 'Deteriorado'.");
+            _estadoFisico = value;
+        }
+    }
+    public Libro(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad, string isbn, int numeroDePaginas, string? editorial, string estadoFisico = "Bueno") 
+        : base(iD, titulo, autor, genero, anio, cantidad)
+    {
+        ISBN = isbn;
+        NumeroDePaginas = numeroDePaginas;
+        Editorial = editorial;
+        EstadoFisico = estadoFisico;
+    }
+
+
+    public override string TipoItem() => "LIBRO";
+
+    public override string ToString()
+    {
+        string estado = Disponible ? "Disponible" : "Prestado";
+        return $" {TipoItem()}|{ID,-15} | {ISBN} | {Titulo,-25} | {Autor,-25} | {Genero,-25} | {Editorial}| {Anio,-5} | { NumeroDePaginas} | {EstadoFisico} | {estado}";
+    }
+
+}
+
