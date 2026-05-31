@@ -11,7 +11,7 @@
     public int ID
     {
         get => _id;
-        set
+        protected set
         {
             if (value < 0 )
                 throw new ArgumentException("El id no puede ser negativo");

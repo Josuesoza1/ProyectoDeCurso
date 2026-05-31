@@ -65,8 +65,8 @@
         }
     }
 
-    public DateTime FechaRegistro1 { get => FechaRegistro; set => FechaRegistro = value; }
-    public List<int> HistorialPrestamoIds { get => historialPrestamoIds; set => historialPrestamoIds = value; }
+    public DateTime FechaRegistro1 { get => FechaRegistro; private set => FechaRegistro = value; }
+    public List<int> HistorialPrestamoIds { get => historialPrestamoIds; private set => historialPrestamoIds = value; }
 
 
 

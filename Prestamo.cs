@@ -5,16 +5,16 @@ public class Prestamo
     private int _usuarioID;
     private int _itemID;
     private string? _tipoItem;
+    private string? _observaciones;
     private DateTime _fechaPrestamo;
     private DateTime _fechaDevolucionEsperada;
     private DateTime? _fechaDevolucionReal;
-    private string? _observaciones;
 
 
     public int Id
     {
         get => _id;
-        set
+       private set
         {
             if (value < 0)
                 throw new ArgumentException("El id no puede ser negativo");
@@ -24,7 +24,7 @@ public class Prestamo
     public int UsuarioID
     {
         get => _usuarioID;
-        set
+        private set
         {
             if (value < 0)
                 throw new ArgumentException("El id no puede ser negativo");
@@ -34,7 +34,7 @@ public class Prestamo
     public int ItemID
     {
         get => _itemID;
-        set
+        private set
         {
             if (value < 0)
                 throw new ArgumentException("El id no puede ser negativo");
@@ -44,16 +44,19 @@ public class Prestamo
     public string? TipoItem
     {
         get => _tipoItem;
-        set => _tipoItem = ValidarTexto(value, "tipoItem");
+        private set => _tipoItem = ValidarTexto(value, "tipoItem");
     }
-    public DateTime FechaPrestamo { get => _fechaPrestamo; set => _fechaPrestamo = value; }
-    public DateTime FechaDevolucionEsperada { get => _fechaDevolucionEsperada; set => _fechaDevolucionEsperada = value; }
-    public DateTime? FechaDevolucionReal { get => _fechaDevolucionReal; set => _fechaDevolucionReal = value; }
+
     public string? Observaciones
     {
         get => _observaciones;
-        set => _observaciones = ValidarTexto(value,"observaciones");
+        private set => _observaciones = ValidarTexto(value, "observaciones");
     }
+
+    public DateTime FechaPrestamo { get => _fechaPrestamo; private set => _fechaPrestamo = value; }
+    public DateTime FechaDevolucionEsperada { get => _fechaDevolucionEsperada; private set => _fechaDevolucionEsperada = value; }
+    public DateTime? FechaDevolucionReal { get => _fechaDevolucionReal; private set => _fechaDevolucionReal = value; }
+    
 
 
 
@@ -65,10 +68,10 @@ public class Prestamo
         UsuarioID = usuarioId;
         ItemID = itemId;
         TipoItem = tipoItem;
+        Observaciones = "Esperando";
         FechaPrestamo = DateTime.Now;
         FechaDevolucionEsperada = DateTime.Now.AddDays(diasPrestamo);
         FechaDevolucionReal = null;
-        Observaciones = "Esperando";
 
     }
     public string Estado
