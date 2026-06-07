@@ -31,7 +31,7 @@
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("El correo no puede estar vacío");
-            if (value.Contains("@") && value.Contains("."))
+            if (!value.Contains("@") && value.Contains("."))
                 throw new ArgumentException("El correo debe contener '@' y '.'");
             _correo = value;
         }
