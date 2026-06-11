@@ -1,17 +1,21 @@
 ﻿public class Usuario
 {
-    private string? _id;
-    private string? _nombre;
-    private string? _apellido;
-    private string? _correo;
-    private string? _telefono;
+    private int _id;
+    private string _nombre = string.Empty;
+    private string _apellido = string.Empty;
+    private string _correo = string.Empty;
+    private string _telefono = string.Empty;
     private DateTime FechaRegistro;
     private List<int> historialPrestamoIds;
 
-    public string? Id
+    public int Id
     {
         get => _id;
-        private set => _id = ValidarTexto(value, "id");
+        set
+        {
+            if (value < 0)
+                throw new ArgumentException("El ID no puede ser negativo");
+        }
 
     }
     public string? Nombre
@@ -22,7 +26,7 @@
     public string? Apellido
     {
         get => _apellido;
-        private set => _apellido = ValidarTexto(value,"apellido");
+        private set => _apellido = ValidarTexto(value, "apellido");
     }
     public string? Correo
     {
@@ -70,7 +74,7 @@
 
 
 
-    public Usuario(string? id, string? nombre, string? apellido, string? correo, string? telefono)
+    public Usuario(int id, string? nombre, string? apellido, string? correo, string? telefono)
     {
         Id = id;
         Nombre = nombre;

@@ -32,7 +32,7 @@
         get => _urlDescarga;
         private set
         {
-            if (!value.ToLower().StartsWith("hhttp://") || !value.ToLower().StartsWith("https://"))
+            if (!value.ToLower().StartsWith("http://") && !value.ToLower().StartsWith("https://"))
                 throw new ArgumentException("La URL debe empezar con http:// o https://");
             _urlDescarga = value;
         }
