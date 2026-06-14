@@ -30,22 +30,19 @@ public class LoanJsonRepository : ILoanRepository
         return JsonSerializer.Deserialize<List<Loan>>(json) ?? new List<Loan>();
     }
 
-    public void Actualizar(Loan loan)
+    public void Actualizar(Loan prestamoModificado)
     {
         List<Loan> prestamos = LeerArchivo();
-        Loan prestamoExistente = prestamos.FirstOrDefault(p => p.IdPrestamo == loan.IdPrestamo) ??
+
+        int index = prestamos.FindIndex(p => p.IdPrestamo == prestamoModificado.IdPrestamo);
+
+        if (index == -1)
             throw new ArgumentException("Préstamo No Encontrado.");
 
-        prestamoExistente.ActualizarObservaciones(loan.Observaciones ?? "Sin observaciones");
-
-        if (loan.FechaDevolucionReal.HasValue)
-        {
-            prestamoExistente.RegistrarDevolucion(loan.FechaDevolucionReal.Value, loan.Observaciones ?? "");
-        }
+        prestamos[index] = prestamoModificado;
 
         GuardarTodos(prestamos);
     }
-
     public void Agregar(Loan loan)
     {
         List<Loan> prestamos = LeerArchivo();
@@ -63,7 +60,7 @@ public class LoanJsonRepository : ILoanRepository
         return prestamos.FirstOrDefault(criterio);
     }
 
-    // Ya usando el tipo int de forma directa y limpia
+    
     public void Eliminar(int id)
     {
         List<Loan> prestamos = LeerArchivo();

@@ -15,23 +15,18 @@
 
     public List<Book> ObtenerTodo()
     {
+
         return _bookRepository.ObtenerTodo();
     }
 
-    public void ActualizarBook(int id, string titulo, string autor, string genero, int anio, int cantidad, string isbn, int numeroDePaginas, string editorial, string estadoFisico)
+    
+    public void ActualizarBook(Book libroActualizado)
     {
-        Book book = new(id, titulo, autor, genero, anio, cantidad, isbn, numeroDePaginas, editorial, estadoFisico);
-        _bookRepository.Actualizar(book);
+        _bookRepository.Actualizar(libroActualizado);
     }
-
     public void EliminarBook(string iSBN)
     {
         _bookRepository.Eliminar(iSBN);
-    }
-
-    public Book Busqueda(string iSBN)
-    {
-        return _bookRepository.Buscar(e => e.ISBN == iSBN);
     }
 
     public int MostrarTotalDeLibros()
@@ -39,14 +34,52 @@
         return _bookRepository.MostrarTotal();
     }
 
-    public List<Book> Ordenar()
+    //TIPOS DE BÚSQUEDA 
+
+    public Book BuscarPorISBN(string isbn)
     {
-        return _bookRepository.OrdenarTodo(e=> e.Autor);
+        return _bookRepository.Buscar(b => b.ISBN == isbn);
     }
 
-    public List<Book> Filtrar(string autorBuscado)
+    public Book BuscarPorId(int id)
     {
-        return _bookRepository.Filtrar(e => e.Autor == autorBuscado);
+        return _bookRepository.Buscar(b => b.ID == id);
     }
+
+    //TIPOS DE FILTROS
+
+    public List<Book> FiltrarPorAutor(string autorBuscado)
+    {
+        return _bookRepository.Filtrar(b => b.Autor != null && b.Autor.Contains(autorBuscado, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public List<Book> FiltrarPorTitulo(string tituloBuscado)
+    {
+        return _bookRepository.Filtrar(b => b.Titulo != null && b.Titulo.Contains(tituloBuscado, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public List<Book> FiltrarPorGenero(string generoBuscado)
+    {
+        return _bookRepository.Filtrar(b => b.Genero != null && b.Genero.Equals(generoBuscado, StringComparison.OrdinalIgnoreCase));
+    }
+
+    //TIPOS DE ORDENAMIENTO
+
+    public List<Book> OrdenarPorAutor()
+    {
+        return _bookRepository.OrdenarTodo(b => b.Autor ?? string.Empty);
+    }
+
+    public List<Book> OrdenarPorTitulo()
+    {
+        return _bookRepository.OrdenarTodo(b => b.Titulo ?? string.Empty);
+    }
+
+    public List<Book> OrdenarPorAnio()
+    {
+        return _bookRepository.OrdenarTodo(b => b.Anio);
+    }
+
 }
+
 

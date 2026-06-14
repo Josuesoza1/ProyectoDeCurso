@@ -31,21 +31,21 @@ public class EbookJsonRepository : IEbookRepository
         return JsonSerializer.Deserialize<List<Ebook>>(json) ??
             new List<Ebook>();
     }
-
-    public void Actualizar(Ebook ebook)
+    public void Actualizar(Ebook ebookModificado)
     {
         List<Ebook> ebooks = LeerArchivo();
-        Ebook nuevosValores = ebooks.FirstOrDefault(e => e.DOI== ebook.DOI) ??
-            throw new ArgumentException("Ebook No Encontrado.");
 
-        nuevosValores.ActualizarTitulo(ebook.Titulo);
-        nuevosValores.ActualizarAutor(ebook.Autor);
-        nuevosValores.ActualizarGenero(ebook.Genero);
-        nuevosValores.ActualizarURL(ebook.UrlDescarga);
+        
+        int index = ebooks.FindIndex(e => e.DOI == ebookModificado.DOI);
+
+        if (index == -1)
+            throw new ArgumentException("Ebook no encontrado.");
+
+        
+        ebooks[index] = ebookModificado;
 
         GuardarTodo(ebooks);
     }
-
     public void Agregar(Ebook ebook)
     {
         List<Ebook> ebooks = LeerArchivo();

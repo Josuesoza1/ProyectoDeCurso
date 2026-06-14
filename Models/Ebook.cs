@@ -90,13 +90,30 @@
         UrlDescarga = nuevaURL;
     }
 
+    public void ActualizarFormato(string nuevoFormato)
+    {
+        Formato = nuevoFormato;
+    }   
+
+    public void ActualizarIdioma(string nuevoIdioma)
+    {
+        Idioma = nuevoIdioma;
+    }
+
+    // Nota: Tu método ActualizarURL(string nuevaURL) ya está creado correctamente.
+
     public override string TipoItem() => "EBOOK";
 
     public override string ToString()
     {
-        string estado = Disponible ? "Disponible" : "Prestado";
-        return $" {TipoItem()}|{ID,-15} | {Formato} | {Titulo,-15} | {Autor,-15} | {Genero,-15} | {Idioma}| {Anio,-5} | {UrlDescarga} | {Tamano} | {estado}";
-
+        string estado = Disponible ? " Disponible" : " Prestado";
+        return $" [EBOOK] ID: {ID}\n" +
+               $"   Título  : {Titulo}\n" +
+               $"   Autor   : {Autor}\n" +
+               $"   Detalles: {Genero} | Año: {Anio} | Idioma: {Idioma}\n" +
+               $"   Archivo : {Formato} ({Tamano} MB) | Enlace: {UrlDescarga}\n" +
+               $"   Estatus : {estado}\n" +
+               $"   {new string('-', 55)}";
     }
 }
 

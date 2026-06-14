@@ -18,38 +18,35 @@
         return _loanRepository.ObtenerTodo();
     }
 
-    public void ActualizarLoan(int id, int usuarioId, int itemId, string tipoItem, int diasPrestamo)
+    public void ActualizarLoan(Loan prestamoActualizado)
     {
-        // Instanciamos el préstamo con el enfoque de la nueva instancia que solicitaste
-        Loan loan = new Loan(id, usuarioId, itemId, tipoItem, diasPrestamo);
-        _loanRepository.Actualizar(loan);
+        _loanRepository.Actualizar(prestamoActualizado);
     }
 
     public void EliminarLoan(int id)
     {
-        // El ID del préstamo es un int, lo mandamos directo sin conversiones
         _loanRepository.Eliminar(id);
     }
 
-    public Loan Busqueda(int id)
-    {
-        return _loanRepository.Buscar(p => p.IdPrestamo == id);
-    }
-
+    
     public int MostrarTotalDePrestamos()
     {
         return _loanRepository.MostrarTotal();
     }
 
-    public List<Loan> Ordenar()
-    {
-        // En préstamos, lo más útil suele ser ordenar cronológicamente por la fecha en que se hicieron
-        return _loanRepository.OrdenarTodo(p => p.FechaPrestamo);
-    }
+    // BÚSQUEDAS
+    public Loan BuscarPorId(int id) => _loanRepository.Buscar(p => p.IdPrestamo == id);
 
-    public List<Loan> Filtrar(int usuarioIdBuscado)
-    {
-        // Filtramos para obtener todos los préstamos que pertenecen a un usuario específico
-        return _loanRepository.Filtrar(p => p.UsuarioID == usuarioIdBuscado);
-    }
+    // FILTROS
+    public List<Loan> FiltrarPorUsuario(int usuarioId) => _loanRepository.Filtrar(p => p.UsuarioID == usuarioId);
+
+    public List<Loan> FiltrarPorItem(int itemId) => _loanRepository.Filtrar(p => p.ItemID == itemId);
+
+    public List<Loan> FiltrarSoloVencidos() => _loanRepository.Filtrar(p => p.EstaVencido && p.Estado != "Devuelto");
+
+    // ORDENAMIENTOS 
+    public List<Loan> OrdenarPorFechaPrestamo() => _loanRepository.OrdenarTodo(p => p.FechaPrestamo);
+
+    public List<Loan> OrdenarPorDevolucionEsperada() => _loanRepository.OrdenarTodo(p => p.FechaDevolucionEsperada);
+
 }

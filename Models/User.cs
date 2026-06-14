@@ -120,8 +120,8 @@
 
     public override string ToString()
     {
-        return $"ID:{Id} | {NombreCompleto} | Correo: {Correo} | Tel: {Telefono} | " +
-               $"Registrado: {FechaRegistro:dd/MM/yyyy}";
+        
+        return $" ID: {Id,-4} | {NombreCompleto,-25} |  {Correo,-25} |  {Telefono}";
     }
 }
 

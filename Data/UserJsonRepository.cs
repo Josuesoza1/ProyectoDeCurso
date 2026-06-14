@@ -29,21 +29,20 @@ public class UserJsonRepository : IUserRepository
         return JsonSerializer.Deserialize<List<User>>(json) ?? new List<User>();
     }
 
-    public void Actualizar(User user)
+    public void Actualizar(User usuarioModificado)
     {
         List<User> usuarios = LeerArchivo();
-        User usuarioExistente = usuarios.FirstOrDefault(u => u.Id == user.Id) ??
+
+        
+        int index = usuarios.FindIndex(u => u.Id == usuarioModificado.Id);
+
+        if (index == -1)
             throw new ArgumentException("Usuario No Encontrado.");
 
-
-        usuarioExistente.ActualizarNombre(user.Nombre);
-        usuarioExistente.ActualizarApellido(user.Apellido);
-        usuarioExistente.ActualizarCorreo(user.Correo);
-        usuarioExistente.ActualizarTelefono(user.Telefono);
+                usuarios[index] = usuarioModificado;
 
         GuardarTodos(usuarios);
     }
-
     public void Agregar(User user)
     {
         List<User> usuarios = LeerArchivo();

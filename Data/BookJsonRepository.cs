@@ -36,20 +36,21 @@ public class BookJsonRepository : IBookRepository
     }
 
 
-    public void Actualizar(Book book)
+    public void Actualizar(Book libroModificado)
     {
         List<Book> books = LeerArchivo();
-        Book nuevosValores = books.FirstOrDefault(e => e.ISBN == book.ISBN) ??
-            throw new ArgumentException("Libro No Encontrado.");
 
-        nuevosValores.ActualizarTitulo(book.Titulo);
-        nuevosValores.ActualizarAutor(book.Autor);
-        nuevosValores.ActualizarGenero(book.Genero);
-        nuevosValores.ActualizarEditorial(book.Editorial);
+        
+        int index = books.FindIndex(b => b.ISBN == libroModificado.ISBN);
+
+        if (index == -1)
+            throw new ArgumentException("Libro no encontrado.");
+
+        
+        books[index] = libroModificado;
 
         GuardarTodo(books);
     }
-
     public void Agregar(Book book)
     {
 

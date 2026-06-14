@@ -78,7 +78,7 @@
         Genero = genero;
         Anio = anio;
         Cantidad = cantidad;
-        Disponible = false;
+        Disponible = true;
     }
 
     public void ActualizarTitulo(string nuevoTitulo)
@@ -112,4 +112,4 @@
 
 
 }
-
+ 

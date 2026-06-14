@@ -18,35 +18,70 @@
         return _ebookRepository.ObtenerTodo();
     }
 
-    public void ActualizarEbook(string doi, int id, string titulo, string autor, string genero, int anio, int cantidad, string formato, double tamano, string urlDescarga, string idioma)
+    public void ActualizarEbook(Ebook ebookActualizado)
     {
-        Ebook ebook = new Ebook(doi, id, titulo, autor, genero, anio, cantidad, formato, tamano, urlDescarga, idioma);
-        _ebookRepository.Actualizar(ebook);
+        _ebookRepository.Actualizar(ebookActualizado);
     }
 
     public void EliminarEbook(string doi)
     {
-        // Usamos el DOI como identificador principal, equivalente al ISBN
+
         _ebookRepository.Eliminar(doi);
     }
 
-    public Ebook Busqueda(string doi)
-    {
-        return _ebookRepository.Buscar(e => e.DOI == doi);
-    }
+
 
     public int MostrarTotalDeEbooks()
     {
         return _ebookRepository.MostrarTotal();
     }
 
-    public List<Ebook> Ordenar()
+    //TIPOS DE BÚSQUEDA 
+
+    public Ebook Busqueda(string doi)
     {
-        return _ebookRepository.OrdenarTodo(e => e.Autor);
+        return _ebookRepository.Buscar(e => e.DOI == doi);
     }
 
-    public List<Ebook> Filtrar(string autorBuscado)
+    public Ebook BuscarPorId(int id)
     {
-        return _ebookRepository.Filtrar(e => e.Autor == autorBuscado);
+        return _ebookRepository.Buscar(e => e.ID == id);
     }
+
+    // TIPOS DE FILTROS
+
+    public List<Ebook> FiltrarPorAutor(string autorBuscado)
+    {
+        return _ebookRepository.Filtrar(e => e.Autor != null && e.Autor.Contains(autorBuscado, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public List<Ebook> FiltrarPorTitulo(string tituloBuscado)
+    {
+        return _ebookRepository.Filtrar(e => e.Titulo != null && e.Titulo.Contains(tituloBuscado, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public List<Ebook> FiltrarPorFormato(string formatoBuscado)
+    {
+        return _ebookRepository.Filtrar(e => e.Formato != null && e.Formato.Equals(formatoBuscado, StringComparison.OrdinalIgnoreCase));
+    }
+
+    // TIPOS DE ORDENAMIENTO
+
+    public List<Ebook> OrdenarPorTitulo()
+    {
+        return _ebookRepository.OrdenarTodo(e => e.Titulo ?? string.Empty);
+    }
+
+    public List<Ebook> OrdenarPorAutor()
+    {
+        return _ebookRepository.OrdenarTodo(e => e.Autor ?? string.Empty);
+    }
+
+    public List<Ebook> OrdenarPorAnio()
+    {
+        return _ebookRepository.OrdenarTodo(e => e.Anio);
+    }
+
+
+
 }

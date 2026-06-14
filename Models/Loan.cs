@@ -127,10 +127,15 @@ public class Loan
             ? FechaDevolucionReal.Value.ToString("dd/MM/yyyy")
             : "Pendiente";
 
-        string alerta = EstaVencido ? " *** VENCIDO ***" : "";
+        // Asignamos un icono visual dependiendo del estado
+        string icono = Estado == "Activo" ? "⏳" : (Estado == "Devuelto" ? "✅" : "⚠️");
+        string alerta = EstaVencido ? " ¡ATENCIÓN: VENCIDO!" : "";
 
-        return $"Préstamo ID:{IdPrestamo} | Usuario ID:{UsuarioID} | Item ID:{ItemID} ({TipoItem})\n" +
-               $"  Prestado: {FechaPrestamo:dd/MM/yyyy} | Vence: {FechaDevolucionEsperada:dd/MM/yyyy}" +
-               $" | Devuelto: {devolucion} | Estado: {Estado}{alerta}";
+        return $" PRÉSTAMO #{IdPrestamo}\n" +
+               $"   Usuario ID: {UsuarioID,-5} | Ítem ID: {ItemID} ({TipoItem})\n" +
+               $"   Fechas    : Prestado el {FechaPrestamo:dd/MM/yyyy} -> Vence el {FechaDevolucionEsperada:dd/MM/yyyy}\n" +
+               $"   Devolución: {devolucion}\n" +
+               $"   Estado    : {icono} {Estado.ToUpper()}{alerta}\n" +
+               $"   {new string('-', 55)}";
     }
 }

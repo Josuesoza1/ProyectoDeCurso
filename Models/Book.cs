@@ -65,11 +65,16 @@
 
 
     public override string TipoItem() => "LIBRO";
-
     public override string ToString()
     {
-        string estado = Disponible ? "Disponible" : "Prestado";
-        return $" {TipoItem()}|{ID,-15} | {ISBN} | {Titulo,-25} | {Autor,-25} | {Genero,-25} | {Editorial}| {Anio,-5} | { NumeroDePaginas} | {EstadoFisico} | {estado}";
+        string estado = Disponible ? " Disponible" : " Prestado";
+        return $" [LIBRO] ID: {ID}\n" +
+               $"   Título  : {Titulo}\n" +
+               $"   Autor   : {Autor}\n" +
+               $"   Detalles: {Genero} | Año: {Anio} | Ed: {Editorial}\n" +
+               $"   Físico  : {NumeroDePaginas} págs. | Estado: {EstadoFisico} | ISBN: {ISBN}\n" +
+               $"   Estatus : {estado}\n" +
+               $"   {new string('-', 55)}";
     }
 
 }

@@ -1,9 +1,11 @@
 ﻿try
 {
+
+
     IBookRepository bookRepository = new BookJsonRepository("Book.json");
     BookService service = new BookService(bookRepository);
 
-    IEbookRepository ebookRepository = new EbookJsonRepository("Ebook.Json");
+    IEbookRepository ebookRepository = new EbookJsonRepository("Ebook.json");
     EbookService service1 = new EbookService(ebookRepository);
 
     ILoanRepository loanRepository = new LoanJsonRepository("Loan.json");
@@ -12,10 +14,12 @@
     IUserRepository userRepository = new UserJsonRepository("User.json");
     UserService service3 = new UserService(userRepository);
 
-    LibrarySystem prueba = new LibrarySystem(service,service1,service2,service3);
+    UiConsole uiConsole = new UiConsole();
+
+    Menus menu = new Menus(service, service1, service2, service3, uiConsole);
+    LibrarySystem prueba = new LibrarySystem(service, service1, service2, service3, menu);
 
     prueba.Iniciar();
-
 
 
 
