@@ -3,11 +3,11 @@ public interface ILoanRepository
 {
 
     void Agregar(Loan loan);
-    Loan BuscarPorId(string id);
+    Loan Buscar(Func<Loan, bool> criterio);
     void Actualizar(Loan loan);
-    void Eliminar(string id);
+    void Eliminar(int id);
     List<Loan> ObtenerTodo();
-    List<Loan> Filtrar(decimal valor, int opcionFiltro);
-    List<Loan> OrdenarTodo();
+    List<Loan> Filtrar(Func<Loan, bool> criterio);
+    List<Loan> OrdenarTodo(Func<Loan, object>  criterio);
     int MostrarTotal();
 }

@@ -2,11 +2,11 @@
 {
 
     void Agregar(Ebook ebook);
-    Ebook BuscarPorCodigo(string codigo);
+    Ebook Buscar(Func<Ebook, bool> criterio);
     void Actualizar(Ebook ebook);
-    void Eliminar(string codigo);
+    void Eliminar(string dOI);
     List<Ebook> ObtenerTodo();
-    List<Ebook> Filtrar(decimal valor, int opcionFiltro);
-    List<Ebook> OrdenarTodo();
+    List<Ebook> Filtrar(Func<Ebook, bool> criterio );
+    List<Ebook> OrdenarTodo(Func<Ebook, object> criterio);
     int MostrarTotal();
 }

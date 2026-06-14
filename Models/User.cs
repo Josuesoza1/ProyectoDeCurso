@@ -11,10 +11,10 @@
     public int Id
     {
         get => _id;
-        set
+       private set
         {
-            if (value < 0)
-                throw new ArgumentException("El ID no puede ser negativo");
+            if (value <= 0)
+                throw new ArgumentException("El ID no puede mayor que 0.");
             _id = value;
         }
 
@@ -91,6 +91,30 @@
             throw new ArgumentException($"El {campo} debe tener al menos 2 caracteres");
         return texto.Trim();
     }
+
+
+    public void ActualizarNombre(string? nuevoNombre)
+    {
+        Nombre = nuevoNombre; 
+    }
+
+    public void ActualizarApellido(string? nuevoApellido)
+    {
+        Apellido = nuevoApellido;
+    }
+
+    public void ActualizarCorreo(string? nuevoCorreo)
+    {
+        Correo = nuevoCorreo;
+    }
+
+    public void ActualizarTelefono(string? nuevoTelefono)
+    {
+        Telefono = nuevoTelefono;
+    }
+
+
+
     public string NombreCompleto => $"{Nombre} {Apellido}";
 
 

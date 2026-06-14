@@ -58,6 +58,12 @@
     }
 
 
+    public void ActualizarEditorial(string nuevoEditorial)
+    {
+        Editorial = nuevoEditorial;
+    }
+
+
     public override string TipoItem() => "LIBRO";
 
     public override string ToString()

@@ -3,11 +3,11 @@ public interface IUserRepository
 {
 
     void Agregar(User user);
-    User BuscarPorId(string id);
+    User Buscar(Func<User,bool> criterio);
     void Actualizar(User user);
-    void Eliminar(string id);
+    void Eliminar(int id);
     List<User> ObtenerTodo();
-    List<User> Filtrar(decimal valor, int opcionFiltro);
-    List<User> OrdenarTodo();
+    List<User> Filtrar(Func<User, bool> criterio);
+    List<User> OrdenarTodo(Func<User, object> criterio);
     int MostrarTotal();
 }

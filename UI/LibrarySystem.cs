@@ -1,30 +1,22 @@
 ﻿
 public class LibrarySystem
 {
-    private readonly UsuarioService _usuarioService;
-    private readonly CatalogoService _catalogoService;
-    private readonly PrestamoService _prestamoService;
+    private readonly BookService _bookservice;
+    private readonly EbookService _ebookservice;
+    private readonly LoanService _loanservice;
+    private readonly UserService _userservice;
 
-    public LibrarySystem()
+    public LibrarySystem(BookService bookservice, EbookService ebookservice, LoanService loanservice, UserService userservice)
     {
-        string directorioData = "data";
-        if (!Directory.Exists(directorioData)) Directory.CreateDirectory(directorioData);
-
-        IUserRepository repoUsuarios = new UserJsonRepository(Path.Combine(directorioData, "usuarios.json"));
-
-
-        _usuarioService = new UsuarioService(repoUsuarios);
-
-
+        _bookservice = bookservice;
+        _ebookservice = ebookservice;
+        _loanservice = loanservice;
+        _userservice = userservice;
     }
 
     public void Iniciar()
     {
-        Console.WriteLine("Bienvenido al sistema.");
+        _bookservice.RegistrarBook(1,"Juan", "juan","Juan", 2015, 5 , "1234567891011",400,"Micasa");
 
-
-        User nuevo = new User(0, "Juan", "Pérez", "juan@correo.com", "72345678");
-
-        _usuarioService.RegistrarUsuario(nuevo);
     }
 }

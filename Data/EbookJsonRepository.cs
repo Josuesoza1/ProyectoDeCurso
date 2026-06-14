@@ -1,53 +1,99 @@
-﻿
-class EbookJsonRepository : IEbookRepository
+﻿using System.Text.Json;
+
+public class EbookJsonRepository : IEbookRepository
 {
     private readonly string _rutaArchivo;
 
     public EbookJsonRepository(string rutaArchivo)
     {
         _rutaArchivo = rutaArchivo;
+
         if (!File.Exists(_rutaArchivo))
             File.WriteAllText(_rutaArchivo, "[]");
     }
 
+    public void GuardarTodo(List<Ebook> ebook)
+    {
+        string json = JsonSerializer.Serialize(ebook,
+            new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
+        File.WriteAllText(_rutaArchivo, json);
+    }
+
+    public List<Ebook> LeerArchivo()
+    {
+        if (!File.Exists(_rutaArchivo)) return new List<Ebook>();
+
+        string json = File.ReadAllText(_rutaArchivo);
+
+        return JsonSerializer.Deserialize<List<Ebook>>(json) ??
+            new List<Ebook>();
+    }
+
     public void Actualizar(Ebook ebook)
     {
-        throw new NotImplementedException();
+        List<Ebook> ebooks = LeerArchivo();
+        Ebook nuevosValores = ebooks.FirstOrDefault(e => e.DOI== ebook.DOI) ??
+            throw new ArgumentException("Ebook No Encontrado.");
+
+        nuevosValores.ActualizarTitulo(ebook.Titulo);
+        nuevosValores.ActualizarAutor(ebook.Autor);
+        nuevosValores.ActualizarGenero(ebook.Genero);
+        nuevosValores.ActualizarURL(ebook.UrlDescarga);
+
+        GuardarTodo(ebooks);
     }
 
     public void Agregar(Ebook ebook)
     {
-        throw new NotImplementedException();
+        List<Ebook> ebooks = LeerArchivo();
+
+        if (ebooks.Any(e => e.DOI== ebook.DOI))
+            throw new InvalidOperationException("El ebook ya existe");
+
+        ebooks.Add(ebook);
+        GuardarTodo(ebooks);
     }
 
-    public Ebook BuscarPorCodigo(string codigo)
+    public Ebook Buscar(Func<Ebook, bool> criterio)
     {
-        throw new NotImplementedException();
+        List<Ebook> ebooks = LeerArchivo();
+        return ebooks.FirstOrDefault(criterio);
     }
 
-    public void Eliminar(string codigo)
+    public void Eliminar(string dOI)
     {
-        throw new NotImplementedException();
+        List<Ebook> ebooks = LeerArchivo();
+
+        Ebook ebook = ebooks.FirstOrDefault(e => e.DOI == dOI) ??
+            throw new InvalidOperationException("El codigo del producto no existe");
+        ebooks.Remove(ebook);
+
+        GuardarTodo(ebooks);
     }
 
-    public List<Ebook> Filtrar(decimal valor, int opcionFiltro)
+    public List<Ebook> Filtrar(Func<Ebook, bool> criterio)
     {
-        throw new NotImplementedException();
+        List<Ebook> ebooks = LeerArchivo();
+        return ebooks.Where(criterio).ToList();
     }
 
     public int MostrarTotal()
     {
-        throw new NotImplementedException();
+        List<Ebook> ebooks = LeerArchivo();
+        return ebooks.Count();
     }
 
     public List<Ebook> ObtenerTodo()
     {
-        throw new NotImplementedException();
+        return LeerArchivo();
     }
 
-    public List<Ebook> OrdenarTodo()
+    public List<Ebook> OrdenarTodo(Func<Ebook, object> criterio)
     {
-        throw new NotImplementedException();
+        List<Ebook> ebooks = LeerArchivo();
+        return ebooks.OrderBy(criterio).ToList();
     }
 }
-

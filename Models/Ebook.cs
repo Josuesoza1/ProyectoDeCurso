@@ -1,11 +1,32 @@
 ﻿public class Ebook : Catalog
 {
-    private string? _formato;
+    private string _dOI = string.Empty;
+    private string _formato = string.Empty;
     private double _tamano;
-    private string? _urlDescarga;
-    private string? _idioma;
+    private string _urlDescarga = string.Empty;
+    private string _idioma = string.Empty;
 
-    public string? Formato
+    public string DOI
+    {
+        get => _dOI;
+        private set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("El DOI no puede estar vacío.");
+            }
+
+            if (!value.StartsWith("10.") || !value.Contains("/"))
+            {
+                throw new ArgumentException("El DOI es inválido. Debe empezar con '10.' y tener una barra '/'.");
+            }
+
+            _dOI = value;
+        }
+    }
+
+
+    public string Formato
     {
         get => _formato;
         private set
@@ -23,7 +44,7 @@
         private set
         {
             if (value < 0 || value > 200)
-                throw new ArgumentException("El tamaño debe estar entre 0 y 200");
+                throw new ArgumentException("El tamaño debe estar entre 0 y 200MB");
             _tamano = value;
         }
     }
@@ -51,15 +72,23 @@
     }
 
 
-    public Ebook(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad, string formato, double tamano, string urlDescarga, string idioma) :
+    public Ebook(string dOI, int iD, string? titulo, string? autor, string? genero,
+        int anio, int cantidad, string formato, double tamano, 
+        string urlDescarga, string idioma) :
         base(iD, titulo, autor, genero, anio, cantidad)
     {
+        DOI = dOI;
         Formato = formato;
         Tamano = tamano;
         UrlDescarga = urlDescarga;
         Idioma = idioma;
     }
 
+
+    public void ActualizarURL(string nuevaURL)
+    {
+        UrlDescarga = nuevaURL;
+    }
 
     public override string TipoItem() => "EBOOK";
 

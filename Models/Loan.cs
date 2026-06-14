@@ -59,9 +59,6 @@ public class Loan
     
 
 
-
-    public Loan() { }
-
     public Loan(int id, int usuarioId, int itemId, string tipoItem, int diasPrestamo = 14)
     {
         IdPrestamo = id;
@@ -91,6 +88,22 @@ public class Loan
             return "Activo";
         }
     }
+
+
+
+    public void RegistrarDevolucion(DateTime fechaDevolucion, string nuevasObservaciones)
+    {
+        FechaDevolucionReal = fechaDevolucion;
+        Observaciones = nuevasObservaciones;
+    }
+
+    public void ActualizarObservaciones(string nuevasObservaciones)
+    {
+        Observaciones = nuevasObservaciones;
+    }
+
+
+
     public bool EstaVencido => Estado == "Vencido";
 
     public int DiasRestantes => Estado == "Activo"
@@ -116,7 +129,7 @@ public class Loan
 
         string alerta = EstaVencido ? " *** VENCIDO ***" : "";
 
-        return $"Préstamo ID:{Id} | Usuario ID:{UsuarioID} | Item ID:{ItemID} ({TipoItem})\n" +
+        return $"Préstamo ID:{IdPrestamo} | Usuario ID:{UsuarioID} | Item ID:{ItemID} ({TipoItem})\n" +
                $"  Prestado: {FechaPrestamo:dd/MM/yyyy} | Vence: {FechaDevolucionEsperada:dd/MM/yyyy}" +
                $" | Devuelto: {devolucion} | Estado: {Estado}{alerta}";
     }

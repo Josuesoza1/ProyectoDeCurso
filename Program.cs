@@ -1,8 +1,20 @@
 ﻿try
 {
-    LibrarySystem prueba = new LibrarySystem();
+    IBookRepository bookRepository = new BookJsonRepository("Book.json");
+    BookService service = new BookService(bookRepository);
 
-    //prueba.Iniciar();
+    IEbookRepository ebookRepository = new EbookJsonRepository("Ebook.Json");
+    EbookService service1 = new EbookService(ebookRepository);
+
+    ILoanRepository loanRepository = new LoanJsonRepository("Loan.json");
+    LoanService service2 = new LoanService(loanRepository);
+
+    IUserRepository userRepository = new UserJsonRepository("User.json");
+    UserService service3 = new UserService(userRepository);
+
+    LibrarySystem prueba = new LibrarySystem(service,service1,service2,service3);
+
+    prueba.Iniciar();
 
 
 

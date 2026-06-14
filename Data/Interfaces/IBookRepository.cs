@@ -2,12 +2,12 @@
 {
 
     void Agregar(Book book);
-    Book BuscarPorISBN(string ISBN);
+    Book Buscar(Func<Book, bool> criterio);
     void Actualizar(Book book);
     void Eliminar(string ISBN);
     List<Book> ObtenerTodo();
-    List<Book> Filtrar(decimal valor, int opcionFiltro);
-    List<Book> OrdenarTodo();
+    List<Book> Filtrar(Func<Book, bool> criterio);
+    List<Book> OrdenarTodo(Func<Book, Object> criterio);
     int MostrarTotal();
 }
 

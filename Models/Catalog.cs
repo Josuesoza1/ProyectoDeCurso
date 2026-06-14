@@ -13,7 +13,7 @@
         get => _id;
         set
         {
-            if (value < 0 )
+            if (value < 0)
                 throw new ArgumentException("El id no puede ser negativo");
             _id = value;
         }
@@ -34,7 +34,7 @@
         get => _genero;
         protected set => _genero = ValidarTexto(value, "genero");
     }
-    
+
     public int Anio
     {
         get => _anio;
@@ -69,6 +69,7 @@
     }
 
 
+
     protected Catalog(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad)
     {
         ID = iD;
@@ -79,6 +80,23 @@
         Cantidad = cantidad;
         Disponible = false;
     }
+
+    public void ActualizarTitulo(string nuevoTitulo)
+    {
+        Titulo = nuevoTitulo;
+    }
+
+    public void ActualizarAutor(string nuevoAutor)
+    {
+        Autor = nuevoAutor;
+    }
+
+    public void ActualizarGenero(string nuevoGenero)
+    {
+        Genero = nuevoGenero;
+    }
+
+
 
 
     public abstract string TipoItem();
