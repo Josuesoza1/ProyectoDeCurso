@@ -623,7 +623,6 @@
             return;
         }
 
-        // 2. Modificar
         Console.WriteLine("\nInformación del préstamo:");
         Console.WriteLine(prestamo.ToString());
 
