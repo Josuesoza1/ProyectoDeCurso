@@ -1,7 +1,7 @@
 ﻿
-public class Prestamo
+public class Loan
 {
-    private int _id;
+    private int _idPrestamo;
     private int _usuarioID;
     private int _itemID;
     private string? _tipoItem;
@@ -11,14 +11,14 @@ public class Prestamo
     private DateTime? _fechaDevolucionReal;
 
 
-    public int Id
+    public int IdPrestamo
     {
-        get => _id;
+        get => _idPrestamo;
        private set
         {
             if (value < 0)
                 throw new ArgumentException("El id no puede ser negativo");
-            _id = value;
+            _idPrestamo = value;
         }
     }
     public int UsuarioID
@@ -60,11 +60,11 @@ public class Prestamo
 
 
 
-    public Prestamo() { }
+    public Loan() { }
 
-    public Prestamo(int id, int usuarioId, int itemId, string tipoItem, int diasPrestamo = 14)
+    public Loan(int id, int usuarioId, int itemId, string tipoItem, int diasPrestamo = 14)
     {
-        Id = id;
+        IdPrestamo = id;
         UsuarioID = usuarioId;
         ItemID = itemId;
         TipoItem = tipoItem;

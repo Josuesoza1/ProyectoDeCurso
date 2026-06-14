@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
-public class UsuarioJsonRepository : IUsuarioRepository
+public class UserJsonRepository : IUserRepository
 {
     private readonly string _rutaArchivo;
 
-    public UsuarioJsonRepository(string rutaArchivo)
+    public UserJsonRepository(string rutaArchivo)
     {
         _rutaArchivo = rutaArchivo;
     }
 
-    public void GuardarTodos(List<Usuario> usuarios)
+    public void GuardarTodos(List<User> usuarios)
     {
         string json = JsonSerializer.Serialize(usuarios,
             new JsonSerializerOptions
@@ -18,11 +18,11 @@ public class UsuarioJsonRepository : IUsuarioRepository
         File.WriteAllText(_rutaArchivo, json);
     }
 
-    public List<Usuario> ObtenerTodos()
+    public List<User> ObtenerTodos()
     {
-        if (!File.Exists(_rutaArchivo)) return new List<Usuario>();
+        if (!File.Exists(_rutaArchivo)) return new List<User>();
 
         string json = File.ReadAllText(_rutaArchivo);
-        return JsonSerializer.Deserialize<List<Usuario>>(json) ?? new List<Usuario>();
+        return JsonSerializer.Deserialize<List<User>>(json) ?? new List<User>();
     }
 }

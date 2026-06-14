@@ -1,4 +1,4 @@
-﻿public class Libro : Catalogo
+﻿public class Book : Catalog
 {
     private string? _iSBN;
     private int _numeroDePaginas;
@@ -48,7 +48,7 @@
             _estadoFisico = value;
         }
     }
-    public Libro(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad, string isbn, int numeroDePaginas, string? editorial, string estadoFisico = "Bueno") 
+    public Book(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad, string isbn, int numeroDePaginas, string? editorial, string estadoFisico = "Bueno") 
         : base(iD, titulo, autor, genero, anio, cantidad)
     {
         ISBN = isbn;

@@ -1,4 +1,4 @@
-﻿public abstract class Catalogo
+﻿public abstract class Catalog
 {
     private int _id;
     private string? _titulo;
@@ -69,7 +69,7 @@
     }
 
 
-    protected Catalogo(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad)
+    protected Catalog(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad)
     {
         ID = iD;
         Titulo = titulo;

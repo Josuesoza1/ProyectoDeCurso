@@ -1,17 +1,17 @@
 ﻿
 public class UsuarioService
 {
-    private readonly IUsuarioRepository _repositorio;
-    private List<Usuario> _usuarios;
+    private readonly IUserRepository _repositorio;
+    private List<User> _usuarios;
 
-    public UsuarioService(IUsuarioRepository repositorio)
+    public UsuarioService(IUserRepository repositorio)
     {
         _repositorio = repositorio;
         _usuarios = _repositorio.ObtenerTodos();
     }
 
 
-    public void RegistrarUsuario(Usuario nuevoUsuario)
+    public void RegistrarUsuario(User nuevoUsuario)
     {
         nuevoUsuario.Id = _usuarios.Count == 0 ? 1 : _usuarios.Max(u => u.Id) + 1;
         _usuarios.Add(nuevoUsuario);
@@ -20,7 +20,7 @@ public class UsuarioService
     }
 
     // Métodos adicionales útiles
-    public List<Usuario> ObtenerTodos()
+    public List<User> ObtenerTodos()
     {
         return _usuarios;
     }

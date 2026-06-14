@@ -1,4 +1,4 @@
-﻿public class Usuario
+﻿public class User
 {
     private int _id;
     private string _nombre = string.Empty;
@@ -15,6 +15,7 @@
         {
             if (value < 0)
                 throw new ArgumentException("El ID no puede ser negativo");
+            _id = value;
         }
 
     }
@@ -74,7 +75,7 @@
 
 
 
-    public Usuario(int id, string? nombre, string? apellido, string? correo, string? telefono)
+    public User(int id, string? nombre, string? apellido, string? correo, string? telefono)
     {
         Id = id;
         Nombre = nombre;

@@ -1,6 +1,6 @@
 ﻿try
 {
-    SistemaBiblioteca prueba = new SistemaBiblioteca();
+    LibrarySystem prueba = new LibrarySystem();
 
     //prueba.Iniciar();
 

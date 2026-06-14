@@ -1,4 +1,4 @@
-﻿public class LibroElectronico : Catalogo
+﻿public class Ebook : Catalog
 {
     private string? _formato;
     private double _tamano;
@@ -51,7 +51,7 @@
     }
 
 
-    public LibroElectronico(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad, string formato, double tamano, string urlDescarga, string idioma) :
+    public Ebook(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad, string formato, double tamano, string urlDescarga, string idioma) :
         base(iD, titulo, autor, genero, anio, cantidad)
     {
         Formato = formato;
