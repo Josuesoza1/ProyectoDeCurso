@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProyectoDeCurso.UI
 {
-    internal class UiConsola
+    internal class UiConsole
     {
     }
 }
