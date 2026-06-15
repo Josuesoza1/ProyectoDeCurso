@@ -43,45 +43,10 @@
         return _ebookRepository.Buscar(e => e.DOI == doi);
     }
 
+
     public Ebook BuscarPorId(int id)
     {
         return _ebookRepository.Buscar(e => e.ID == id);
     }
-
-    // TIPOS DE FILTROS
-
-    public List<Ebook> FiltrarPorAutor(string autorBuscado)
-    {
-        return _ebookRepository.Filtrar(e => e.Autor != null && e.Autor.Contains(autorBuscado, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public List<Ebook> FiltrarPorTitulo(string tituloBuscado)
-    {
-        return _ebookRepository.Filtrar(e => e.Titulo != null && e.Titulo.Contains(tituloBuscado, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public List<Ebook> FiltrarPorFormato(string formatoBuscado)
-    {
-        return _ebookRepository.Filtrar(e => e.Formato != null && e.Formato.Equals(formatoBuscado, StringComparison.OrdinalIgnoreCase));
-    }
-
-    // TIPOS DE ORDENAMIENTO
-
-    public List<Ebook> OrdenarPorTitulo()
-    {
-        return _ebookRepository.OrdenarTodo(e => e.Titulo ?? string.Empty);
-    }
-
-    public List<Ebook> OrdenarPorAutor()
-    {
-        return _ebookRepository.OrdenarTodo(e => e.Autor ?? string.Empty);
-    }
-
-    public List<Ebook> OrdenarPorAnio()
-    {
-        return _ebookRepository.OrdenarTodo(e => e.Anio);
-    }
-
-
 
 }

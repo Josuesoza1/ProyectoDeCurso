@@ -100,7 +100,7 @@
         Idioma = nuevoIdioma;
     }
 
-    // Nota: Tu método ActualizarURL(string nuevaURL) ya está creado correctamente.
+    
 
     public override string TipoItem() => "EBOOK";
 

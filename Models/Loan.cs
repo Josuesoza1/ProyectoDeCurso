@@ -56,20 +56,19 @@ public class Loan
     public DateTime FechaPrestamo { get => _fechaPrestamo; private set => _fechaPrestamo = value; }
     public DateTime FechaDevolucionEsperada { get => _fechaDevolucionEsperada; private set => _fechaDevolucionEsperada = value; }
     public DateTime? FechaDevolucionReal { get => _fechaDevolucionReal; private set => _fechaDevolucionReal = value; }
-    
 
 
-    public Loan(int id, int usuarioId, int itemId, string tipoItem, int diasPrestamo = 14)
+
+    public Loan(int idPrestamo, int usuarioID, int itemID, string? tipoItem, string? observaciones, DateTime fechaPrestamo, DateTime fechaDevolucionEsperada, DateTime? fechaDevolucionReal)
     {
-        IdPrestamo = id;
-        UsuarioID = usuarioId;
-        ItemID = itemId;
+        IdPrestamo = idPrestamo;
+        UsuarioID = usuarioID;
+        ItemID = itemID;
         TipoItem = tipoItem;
-        Observaciones = "Esperando";
-        FechaPrestamo = DateTime.Now;
-        FechaDevolucionEsperada = DateTime.Now.AddDays(diasPrestamo);
-        FechaDevolucionReal = null;
-
+        Observaciones = observaciones;
+        FechaPrestamo = fechaPrestamo;
+        FechaDevolucionEsperada = fechaDevolucionEsperada;
+        FechaDevolucionReal = fechaDevolucionReal;
     }
     public string Estado
     {
@@ -127,15 +126,14 @@ public class Loan
             ? FechaDevolucionReal.Value.ToString("dd/MM/yyyy")
             : "Pendiente";
 
-        // Asignamos un icono visual dependiendo del estado
-        string icono = Estado == "Activo" ? "⏳" : (Estado == "Devuelto" ? "✅" : "⚠️");
+        
         string alerta = EstaVencido ? " ¡ATENCIÓN: VENCIDO!" : "";
 
         return $" PRÉSTAMO #{IdPrestamo}\n" +
                $"   Usuario ID: {UsuarioID,-5} | Ítem ID: {ItemID} ({TipoItem})\n" +
                $"   Fechas    : Prestado el {FechaPrestamo:dd/MM/yyyy} -> Vence el {FechaDevolucionEsperada:dd/MM/yyyy}\n" +
                $"   Devolución: {devolucion}\n" +
-               $"   Estado    : {icono} {Estado.ToUpper()}{alerta}\n" +
+               $"   Estado    : {Estado.ToUpper()}{alerta}\n" +
                $"   {new string('-', 55)}";
     }
 }

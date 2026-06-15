@@ -169,156 +169,116 @@
     }
 
 
-    public void MenuBusqueda()
+    public void MenuConsultasCatalogo()
     {
         bool volver = false;
         do
         {
-            _uiconsole.MenuBusqueda();
+            Console.Clear();
+            Console.WriteLine("═══ MOTOR DE CONSULTAS GENERALES (CATÁLOGO) ═══");
+            Console.WriteLine("1. Buscar por Título (Coincidencia parcial en Ambos)");
+            Console.WriteLine("2. Buscar por Autor (Coincidencia parcial en Ambos)");
+            Console.WriteLine("3. Buscar Libro Físico por ISBN (Exclusivo Físico)");
+            Console.WriteLine("4. Buscar Ebook por código DOI (Exclusivo Digital)");
+            Console.WriteLine("5. Ordenar Todo el Catálogo por Título (A-Z)");
+            Console.WriteLine("6. Ordenar Todo el Catálogo por Año de Publicación");
+            Console.WriteLine("7. Volver al menú de gestión");
             Console.Write("\nSeleccione una opción: ");
+
             int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
+
+            List<Catalog> todoElCatalogo = new List<Catalog>();
+            todoElCatalogo.AddRange(_bookservice.ObtenerTodo());
+            todoElCatalogo.AddRange(_ebookservice.ObtenerTodo());
+
+            List<Catalog> resultados = new List<Catalog>();
+
             switch (opcion)
             {
                 case 1:
-                    Console.WriteLine("Ingrese el ISBN del libro a buscar:");
-                    string isbn = Console.ReadLine().Trim();
-                    var libro = _bookservice.BuscarPorISBN(isbn);
-                    if (libro != null)
-                    {
-                        Console.WriteLine("Libro encontrado:");
-                        Console.WriteLine(libro.ToString());
-                    }
-                    else
-                    {
-                        Console.WriteLine("No se encontró ningún libro con ese ISBN.");
-                    }
-                    _uiconsole.PresioneParaContinuar();
+                    Console.Clear();
+                    Console.Write("Ingrese las palabras clave del título: ");
+                    string filtroTitulo = Console.ReadLine().Trim();
+                    resultados = todoElCatalogo
+                        .Where(c => c.Titulo != null && c.Titulo.Contains(filtroTitulo, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    ImprimirResultadosMixtos(resultados);
                     break;
+
                 case 2:
-                    Console.WriteLine("Ingrese el DOI del ebook a buscar:");
-                    string doi = Console.ReadLine().Trim();
-                    var ebook = _ebookservice.Busqueda(doi);
-                    if (ebook != null)
-                    {
-                        Console.WriteLine("Ebook encontrado:");
-                        Console.WriteLine(ebook.ToString());
-                    }
-                    else
-                    {
-                        Console.WriteLine("No se encontró ningún ebook con ese DOI.");
-                    }
-                    _uiconsole.PresioneParaContinuar();
+                    Console.Clear();
+                    Console.Write("Ingrese el nombre del autor: ");
+                    string filtroAutor = Console.ReadLine().Trim();
+                    resultados = todoElCatalogo
+                        .Where(c => c.Autor != null && c.Autor.Contains(filtroAutor, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    ImprimirResultadosMixtos(resultados);
                     break;
+
                 case 3:
+                    Console.Clear();
+                    Console.Write("Ingrese el ISBN de 13 dígitos: ");
+                    string isbnBuscado = Console.ReadLine().Trim();
+                    var libroFisico = _bookservice.BuscarPorISBN(isbnBuscado);
+                    if (libroFisico != null) resultados.Add(libroFisico);
+                    ImprimirResultadosMixtos(resultados);
+                    break;
+
+                case 4:
+                    Console.Clear();
+                    Console.Write("Ingrese el DOI del documento electrónico: ");
+                    string doiBuscado = Console.ReadLine().Trim();
+                    var ebookDigital = _ebookservice.Busqueda(doiBuscado);
+                    if (ebookDigital != null) resultados.Add(ebookDigital);
+                    ImprimirResultadosMixtos(resultados);
+                    break;
+
+                case 5:
+                    Console.Clear();
+                    Console.WriteLine("=== TODO EL CATÁLOGO MIXTO ORDENADO POR TÍTULO ===");
+                    resultados = todoElCatalogo.OrderBy(c => c.Titulo ?? string.Empty).ToList();
+                    ImprimirResultadosMixtos(resultados);
+                    break;
+
+                case 6:
+                    Console.Clear();
+                    Console.WriteLine("=== TODO EL CATÁLOGO MIXTO ORDENADO POR AÑO (MÁS ANTIGUOS PRIMERO) ===");
+                    resultados = todoElCatalogo.OrderBy(c => c.Anio).ToList();
+                    ImprimirResultadosMixtos(resultados);
+                    break;
+
+                case 7:
                     volver = true;
                     break;
+
                 default:
-                    Console.WriteLine("Opción no válida. Presione cualquier tecla...");
-                    Console.ReadKey();
+                    Console.WriteLine("Opción inválida. Intente de nuevo.");
+                    _uiconsole.PresioneParaContinuar();
                     break;
             }
         } while (!volver);
     }
 
-    public void MenuFiltros()
+
+    private void ImprimirResultadosMixtos(List<Catalog> lista)
     {
-        bool volver = false;
-        do
+        Console.WriteLine($"\n--- Coincidencias encontradas: ({lista.Count}) ---");
+        if (lista.Count == 0)
         {
-            _uiconsole.MenuFiltro();
-            Console.Write("\nSeleccione una opción: ");
-            int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
-            switch (opcion)
+            Console.WriteLine("No se registraron coincidencias bajo los parámetros indicados.");
+        }
+        else
+        {
+            foreach (var item in lista)
             {
-                case 1:
-                    Console.WriteLine("Ingrese el autor a filtrar:");
-                    string autor = Console.ReadLine().Trim();
-                    var librosFiltrados = _bookservice.FiltrarPorAutor(autor);
-                    if (librosFiltrados.Count == 0)
-                    {
-                        Console.WriteLine("No se encontraron libros de ese autor.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Libros del autor '{autor}':");
-                        foreach (var libro in librosFiltrados)
-                        {
-                            Console.WriteLine(libro.ToString());
-                            Console.WriteLine();
-                        }
-                    }
-                    _uiconsole.PresioneParaContinuar();
-                    break;
-                case 2:
-                    Console.WriteLine("Ingrese el título a filtrar:");
-                    string titulo = Console.ReadLine().Trim();
-                    var ebooksFiltrados = _ebookservice.FiltrarPorTitulo(titulo);
-                    if (ebooksFiltrados.Count == 0)
-                    {
-                        Console.WriteLine("No se encontraron ebooks con ese título.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Ebooks con título '{titulo}':");
-                        foreach (var ebook in ebooksFiltrados)
-                        {
-                            Console.WriteLine(ebook.ToString());
-                            Console.WriteLine();
-                        }
-                    }
-                    _uiconsole.PresioneParaContinuar();
-                    break;
-                case 3:
-                    volver = true;
-                    break;
-                default:
-                    Console.WriteLine("Opción no válida. Presione cualquier tecla...");
-                    Console.ReadKey();
-                    break;
+
+                Console.WriteLine(item.ToString());
+                Console.WriteLine();
             }
-        } while (!volver);
+        }
+        _uiconsole.PresioneParaContinuar();
     }
 
-    public void MenuOrdenamiento()
-    {
-        bool volver = false;
-        do
-        {
-            _uiconsole.MenuOrdenamiento();
-            Console.Write("\nSeleccione una opción: ");
-            int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
-            switch (opcion)
-            {
-                case 1:
-                    var librosOrdenados = _bookservice.OrdenarPorTitulo();
-                    Console.WriteLine("Libros ordenados por título:");
-                    foreach (var libro in librosOrdenados)
-                    {
-                        Console.WriteLine(libro.ToString());
-                        Console.WriteLine();
-                    }
-                    _uiconsole.PresioneParaContinuar();
-                    break;
-                case 2:
-                    var ebooksOrdenados = _ebookservice.OrdenarPorTitulo();
-                    Console.WriteLine("Ebooks ordenados por título:");
-                    foreach (var ebook in ebooksOrdenados)
-                    {
-                        Console.WriteLine(ebook.ToString());
-                        Console.WriteLine();
-                    }
-                    _uiconsole.PresioneParaContinuar();
-                    break;
-                case 3:
-                    volver = true;
-                    break;
-                default:
-                    Console.WriteLine("Opción no válida. Presione cualquier tecla...");
-                    Console.ReadKey();
-                    break;
-            }
-        } while (!volver);
-    }
 
     public void MenuLibros()
     {
@@ -477,6 +437,8 @@
 
 
 
+
+
     public void MenuGestionCatalogo()
     {
         bool volver = false;
@@ -499,18 +461,10 @@
 
                     break;
                 case 4:
-                    MenuBusqueda();
+                    MenuConsultasCatalogo();
                     _uiconsole.PresioneParaContinuar();
                     break;
                 case 5:
-                    MenuFiltros();
-                    _uiconsole.PresioneParaContinuar();
-                    break;
-                case 6:
-                    MenuOrdenamiento();
-                    _uiconsole.PresioneParaContinuar();
-                    break;
-                case 7:
                     volver = true;
                     break;
                 default:
@@ -600,7 +554,6 @@
     }
 
 
-
     public void GestionarDevolucionOEditarPrestamo()
     {
         Console.Clear();
@@ -613,7 +566,7 @@
             return;
         }
 
-
+        
         Loan prestamo = _loanservice.BuscarPorId(id);
 
         if (prestamo == null)
@@ -623,7 +576,7 @@
             return;
         }
 
-        Console.WriteLine("\nInformación del préstamo:");
+        Console.WriteLine("\nInformación actual del préstamo:");
         Console.WriteLine(prestamo.ToString());
 
         Console.WriteLine("\n¿Qué acción desea realizar?");
@@ -633,14 +586,15 @@
 
         int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
 
+
         switch (opcion)
         {
             case 1:
                 Console.Write("Ingrese observaciones de entrega (ej. 'Entregado a tiempo', 'Portada rayada'): ");
                 string notasDevolucion = Console.ReadLine();
 
+                
                 prestamo.RegistrarDevolucion(DateTime.Now, notasDevolucion);
-
                 break;
 
             case 2:
@@ -649,15 +603,181 @@
                 break;
 
             default:
-                Console.WriteLine("Opción cancelada.");
+                Console.WriteLine("Opción cancelada o no válida.");
+                _uiconsole.PresioneParaContinuar();
                 return;
         }
 
         
         _loanservice.ActualizarLoan(prestamo);
-        Console.WriteLine("\n¡El estado del préstamo se actualizó con éxito!");
-        Console.WriteLine("Presione cualquier tecla para continuar...");
-        Console.ReadKey();
+
+        Console.WriteLine("\n¡El estado del préstamo se actualizó con éxito en el sistema!");
+        _uiconsole.PresioneParaContinuar();
+    }
+
+    public void MenuUsuarios()
+    {
+        bool volver = false;
+        do
+        {
+            _uiconsole.MostrarMenuUsuarios();
+            Console.Write("\nSeleccione una opción: ");
+            int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
+            switch (opcion)
+            {
+                case 1:
+                    Console.WriteLine("Ingrese el ID del usuario:");
+                    int id = int.TryParse(Console.ReadLine(), out int idResult) ? idResult : 0;
+                    Console.WriteLine("Ingrese el nombre del usuario:");
+                    string nombre = Console.ReadLine().Trim();
+                    Console.WriteLine("Ingrese el apellido del usuario:");
+                    string apellido = Console.ReadLine().Trim();
+                    Console.WriteLine("Ingrese el correo electrónico del usuario:");
+                    string correo = Console.ReadLine().Trim();
+                    Console.WriteLine("Ingrese el teléfono del usuario (8 dígitos):");
+                    string telefono = Console.ReadLine().Trim();
+                    _userservice.RegistrarUser(id, nombre, apellido, correo, telefono);
+                    break;
+                case 2:
+                    var usuarios = _userservice.ObtenerTodo();
+                    if (usuarios.Count == 0)
+                    {
+                        Console.WriteLine("No hay usuarios registrados.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("=== LISTA DE USUARIOS ===");
+                        foreach (var user in usuarios)
+                        {
+                            Console.WriteLine(user.ToString());
+                        }
+                    }
+                    _uiconsole.PresioneParaContinuar();
+                    break;
+                case 3:
+                    EditarUsuario();
+                    _uiconsole.PresioneParaContinuar();
+                    break;
+                case 4:
+                    try
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ingrese el ID del usuario a eliminar:");
+                        if (!int.TryParse(Console.ReadLine(), out int idEliminar))
+                        {
+
+                            Console.WriteLine("ID inválido.");
+                            Console.ReadKey();
+                            return;
+                        }
+
+                        _userservice.EliminarUser(idEliminar);
+                        Console.WriteLine($"Lista Actualizada despues de la eliminación del usuario con ID {idEliminar}.");
+                        _uiconsole.MostrarUser(_userservice.ObtenerTodo());
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    _uiconsole.PresioneParaContinuar();
+                    break;
+                case 5:
+                    volver = true;
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida. Presione cualquier tecla...");
+                    Console.ReadKey();
+                    break;
+            }
+        } while (!volver);
+    }
+
+
+    public void MenuPrestamos()
+    {
+        bool volver = false;
+        do
+        {
+            _uiconsole.MostrarMenuPrestamos();
+            Console.Write("\nSeleccione una opción: ");
+            int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
+
+            switch (opcion)
+            {
+                case 1:
+                    Console.Clear();
+                    Console.WriteLine("=== REGISTRAR NUEVO PRÉSTAMO ===");
+
+                    
+                    Console.Write("Ingrese el ID del Usuario: ");
+                    if (!int.TryParse(Console.ReadLine(), out int idUsuario)) { Console.WriteLine("ID inválido."); break; }
+
+                    var usuario = _userservice.BuscarPorId(idUsuario);
+                    if (usuario == null)
+                    {
+                        Console.WriteLine("\n No existe ningún usuario registrado con ese ID.");
+                        _uiconsole.PresioneParaContinuar();
+                        break; 
+                    }
+
+                    
+                    Console.Write("Ingrese el ID del Libro o Ebook a prestar: ");
+                    if (!int.TryParse(Console.ReadLine(), out int idItem)) { Console.WriteLine("ID inválido."); break; }
+
+                    string tipoItem = "";
+                    var libroFisico = _bookservice.BuscarPorId(idItem);
+                    var ebookDigital = _ebookservice.BuscarPorId(idItem);
+
+                    if (libroFisico != null) tipoItem = "Libro Físico";
+                    else if (ebookDigital != null) tipoItem = "Ebook";
+                    else
+                    {
+                        Console.WriteLine("\n No existe ningún artículo en el catálogo con ese ID.");
+                        _uiconsole.PresioneParaContinuar();
+                        break; 
+                    }
+
+                    
+                    Console.Write("\nIngrese un ID único para este nuevo registro de préstamo: ");
+                    if (!int.TryParse(Console.ReadLine(), out int idPrestamo)) { Console.WriteLine("ID inválido."); break; }
+
+                    try
+                    {
+                        
+                        _loanservice.RegistrarLoan(idPrestamo, idUsuario, idItem, tipoItem, 14);
+                        Console.WriteLine($"\n¡Éxito! Préstamo registrado a nombre de: {usuario.NombreCompleto}");
+                        Console.WriteLine($"Artículo prestado: {(libroFisico != null ? libroFisico.Titulo : ebookDigital.Titulo)}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\nError al guardar: {ex.Message}");
+                    }
+
+                    _uiconsole.PresioneParaContinuar();
+                    break;
+
+                case 2:
+                    Console.Clear();
+                    var prestamos = _loanservice.ObtenerTodo();
+                    if (prestamos.Count == 0) Console.WriteLine("No hay préstamos registrados.");
+                    else
+                    {
+                        Console.WriteLine("=== LISTA DE PRÉSTAMOS ===");
+                        foreach (var p in prestamos) { Console.WriteLine(p.ToString()); Console.WriteLine(); }
+                    }
+                    _uiconsole.PresioneParaContinuar();
+                    break;
+
+                case 3:
+                    volver = true;
+                    break;
+
+                default:
+                    Console.WriteLine("Opción no válida.");
+                    _uiconsole.PresioneParaContinuar();
+                    break;
+            }
+        } while (!volver);
     }
 
     public void MostrarMenuPrincipal()
@@ -676,10 +796,10 @@
                     MenuGestionCatalogo();
                     break;
                 case 2:
-                    // MenuUsuarios();                   //Cocinando (Aún falta)
+                    MenuUsuarios();
                     break;
                 case 3:
-                    // MenuPrestamos();                  //Lo mismo que arriba
+                    MenuPrestamos();
                     break;
                 case 4:
                     salir = true;

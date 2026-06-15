@@ -45,6 +45,10 @@ catch (ArgumentException ex)
 {
     Console.WriteLine(ex.Message);
 }
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Operación no válida: {ex.Message}");
+}
 Console.WriteLine();
 Console.WriteLine("Presione una tecla para salir...");
 Console.ReadKey();

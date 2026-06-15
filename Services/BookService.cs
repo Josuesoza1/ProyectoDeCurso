@@ -45,41 +45,6 @@
     {
         return _bookRepository.Buscar(b => b.ID == id);
     }
-
-    //TIPOS DE FILTROS
-
-    public List<Book> FiltrarPorAutor(string autorBuscado)
-    {
-        return _bookRepository.Filtrar(b => b.Autor != null && b.Autor.Contains(autorBuscado, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public List<Book> FiltrarPorTitulo(string tituloBuscado)
-    {
-        return _bookRepository.Filtrar(b => b.Titulo != null && b.Titulo.Contains(tituloBuscado, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public List<Book> FiltrarPorGenero(string generoBuscado)
-    {
-        return _bookRepository.Filtrar(b => b.Genero != null && b.Genero.Equals(generoBuscado, StringComparison.OrdinalIgnoreCase));
-    }
-
-    //TIPOS DE ORDENAMIENTO
-
-    public List<Book> OrdenarPorAutor()
-    {
-        return _bookRepository.OrdenarTodo(b => b.Autor ?? string.Empty);
-    }
-
-    public List<Book> OrdenarPorTitulo()
-    {
-        return _bookRepository.OrdenarTodo(b => b.Titulo ?? string.Empty);
-    }
-
-    public List<Book> OrdenarPorAnio()
-    {
-        return _bookRepository.OrdenarTodo(b => b.Anio);
-    }
-
 }
 
 

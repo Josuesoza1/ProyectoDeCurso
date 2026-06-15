@@ -17,11 +17,8 @@
     {
         return _userRepository.ObtenerTodo();
     }
+    public void ActualizarUser(User usuarioActualizado) => _userRepository.Actualizar(usuarioActualizado);
 
-    public void ActualizarUser(User usuarioActualizado)
-    {
-        _userRepository.Actualizar(usuarioActualizado);
-    }
     public void EliminarUser(int id)
     {
 
@@ -34,21 +31,6 @@
     {
         return _userRepository.MostrarTotal();
     }
-
-    // BÚSQUEDAS 
     public User BuscarPorId(int id) => _userRepository.Buscar(u => u.Id == id);
-
-    public User BuscarPorCorreo(string correo)
-        => _userRepository.Buscar(u => u.Correo != null && u.Correo.Equals(correo, StringComparison.OrdinalIgnoreCase));
-
-    // FILTROS 
-    public List<User> FiltrarPorNombreOApellido(string texto)
-        => _userRepository.Filtrar(u => u.NombreCompleto.Contains(texto, StringComparison.OrdinalIgnoreCase));
-
-    // ORDENAMIENTOS 
-    public List<User> OrdenarPorNombre() => _userRepository.OrdenarTodo(u => u.Nombre);
-
-    public List<User> OrdenarPorId() => _userRepository.OrdenarTodo(u => u.Id);
-
 
 }
