@@ -96,7 +96,24 @@
         Genero = nuevoGenero;
     }
 
+    public void PrestarItem()
+    {
+        if (Cantidad <= 0)
+            throw new InvalidOperationException("No hay copias disponibles para prestar.");
 
+        Cantidad--; 
+
+        if (Cantidad == 0)
+        {
+            Disponible = false;
+        }
+    }
+
+    public void DevolverItem()
+    {
+        Cantidad++; 
+        Disponible = true; 
+    }
 
 
     public abstract string TipoItem();
@@ -112,4 +129,3 @@
 
 
 }
- 

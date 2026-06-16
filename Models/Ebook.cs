@@ -106,7 +106,9 @@
 
     public override string ToString()
     {
-        string estado = Disponible ? " Disponible" : " Prestado";
+        
+        string estado = Cantidad > 0 ? $"Disponible ({Cantidad} licencias)" : "Agotado / Prestado";
+
         return $" [EBOOK] ID: {ID}\n" +
                $"   Título  : {Titulo}\n" +
                $"   Autor   : {Autor}\n" +

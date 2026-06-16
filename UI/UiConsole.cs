@@ -109,10 +109,11 @@
         Console.WriteLine("=== GESTIÓN DE PRÉSTAMOS ===");
         Console.WriteLine("1. Agregar Préstamo");
         Console.WriteLine("2. Listar Préstamos");
-        Console.WriteLine("3. Volver al menú principal");
+        Console.WriteLine("3. Registrar Devolución / Editar Préstamo");
+        Console.WriteLine("4. Volver al menú principal");
     }
 
-    
+
 
 }
 

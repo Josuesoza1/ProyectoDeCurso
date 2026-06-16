@@ -67,7 +67,9 @@
     public override string TipoItem() => "LIBRO";
     public override string ToString()
     {
-        string estado = Disponible ? " Disponible" : " Prestado";
+        
+        string estado = Cantidad > 0 ? $"Disponible ({Cantidad} copias en stock)" : "Agotado / Prestado";
+
         return $" [LIBRO] ID: {ID}\n" +
                $"   Título  : {Titulo}\n" +
                $"   Autor   : {Autor}\n" +
@@ -76,6 +78,5 @@
                $"   Estatus : {estado}\n" +
                $"   {new string('-', 55)}";
     }
-
 }
 

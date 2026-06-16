@@ -566,7 +566,7 @@
             return;
         }
 
-        
+
         Loan prestamo = _loanservice.BuscarPorId(id);
 
         if (prestamo == null)
@@ -593,7 +593,7 @@
                 Console.Write("Ingrese observaciones de entrega (ej. 'Entregado a tiempo', 'Portada rayada'): ");
                 string notasDevolucion = Console.ReadLine();
 
-                
+
                 prestamo.RegistrarDevolucion(DateTime.Now, notasDevolucion);
                 break;
 
@@ -608,7 +608,7 @@
                 return;
         }
 
-        
+
         _loanservice.ActualizarLoan(prestamo);
 
         Console.WriteLine("\n¡El estado del préstamo se actualizó con éxito en el sistema!");
@@ -693,6 +693,10 @@
     }
 
 
+
+
+
+
     public void MenuPrestamos()
     {
         bool volver = false;
@@ -708,7 +712,7 @@
                     Console.Clear();
                     Console.WriteLine("=== REGISTRAR NUEVO PRÉSTAMO ===");
 
-                    
+
                     Console.Write("Ingrese el ID del Usuario: ");
                     if (!int.TryParse(Console.ReadLine(), out int idUsuario)) { Console.WriteLine("ID inválido."); break; }
 
@@ -717,10 +721,10 @@
                     {
                         Console.WriteLine("\n No existe ningún usuario registrado con ese ID.");
                         _uiconsole.PresioneParaContinuar();
-                        break; 
+                        break;
                     }
 
-                    
+
                     Console.Write("Ingrese el ID del Libro o Ebook a prestar: ");
                     if (!int.TryParse(Console.ReadLine(), out int idItem)) { Console.WriteLine("ID inválido."); break; }
 
@@ -734,16 +738,16 @@
                     {
                         Console.WriteLine("\n No existe ningún artículo en el catálogo con ese ID.");
                         _uiconsole.PresioneParaContinuar();
-                        break; 
+                        break;
                     }
 
-                    
+
                     Console.Write("\nIngrese un ID único para este nuevo registro de préstamo: ");
                     if (!int.TryParse(Console.ReadLine(), out int idPrestamo)) { Console.WriteLine("ID inválido."); break; }
 
                     try
                     {
-                        
+
                         _loanservice.RegistrarLoan(idPrestamo, idUsuario, idItem, tipoItem, 14);
                         Console.WriteLine($"\n¡Éxito! Préstamo registrado a nombre de: {usuario.NombreCompleto}");
                         Console.WriteLine($"Artículo prestado: {(libroFisico != null ? libroFisico.Titulo : ebookDigital.Titulo)}");
@@ -769,9 +773,11 @@
                     break;
 
                 case 3:
+                    GestionarDevolucionOEditarPrestamo();
+                    break;
+                case 4:
                     volver = true;
                     break;
-
                 default:
                     Console.WriteLine("Opción no válida.");
                     _uiconsole.PresioneParaContinuar();
