@@ -761,7 +761,6 @@
 
                     Catalog itemDevuelto = null;
 
-                    // Identificamos el catálogo correcto usando el TipoItem registrado en el préstamo
                     if (prestamo.TipoItem == "Libro Físico")
                     {
                         itemDevuelto = _bookservice.BuscarPorId(prestamo.ItemID);

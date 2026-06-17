@@ -39,7 +39,7 @@
         return _ebookRepository.MostrarTotal();
     }
 
-    //TIPOS DE BÚSQUEDA 
+    
 
     public Ebook Busqueda(string doi)
     {
