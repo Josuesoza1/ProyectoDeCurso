@@ -7,12 +7,14 @@
         _loanRepository = loanRepository;
     }
 
-    public void RegistrarLoan(int id, int usuarioId, int itemId, string tipoItem, int diasPrestamo = 14)
+    public void RegistrarLoan(int usuarioId, int itemId, string tipoItem, int diasPrestamo = 14)
     {
 
-        DateTime fechaInicio = DateTime.Now;
+        DateTime fechaInicio = DateTime.Today;
         DateTime fechaVencimiento = fechaInicio.AddDays(diasPrestamo);
 
+        var prestamosExistentes = _loanRepository.ObtenerTodo();
+        int id = prestamosExistentes.Count > 0 ? prestamosExistentes.Max(p => p.IdPrestamo) + 1 : 1;
 
         Loan nuevoPrestamo = new Loan(id, usuarioId, itemId, tipoItem, "Esperando", fechaInicio, fechaVencimiento, null);
         _loanRepository.Agregar(nuevoPrestamo);

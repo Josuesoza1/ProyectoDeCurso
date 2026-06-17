@@ -7,9 +7,12 @@
         _bookRepository = bookRepository;
     }
 
-    public void RegistrarBook(int id, string titulo, string autor, string genero, int anio, int cantidad, string isbn, int numeroDePaginas, string editorial, string estadoFisico = "Bueno")
+    public void RegistrarBook(string titulo, string autor, string genero, int anio, int cantidad, string isbn, int numeroDePaginas, string editorial, string estadoFisico = "Bueno")
     {
-        Book nuevoLibro = new Book(id, titulo, autor, genero, anio, cantidad, isbn, numeroDePaginas, editorial, estadoFisico);
+        var librosExistentes = _bookRepository.ObtenerTodo();
+        int id = librosExistentes.Count > 0 ? librosExistentes.Max(b => b.ID) + 1 : 1;
+
+        Book nuevoLibro = new Book(id, isbn, titulo, autor, genero, anio, cantidad, numeroDePaginas, editorial, estadoFisico);
         _bookRepository.Agregar(nuevoLibro);
     }
 

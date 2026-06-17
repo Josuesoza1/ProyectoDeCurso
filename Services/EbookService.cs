@@ -7,9 +7,12 @@
         _ebookRepository = ebookRepository;
     }
 
-    public void RegistrarEbook(string doi, int id, string titulo, string autor, string genero, int anio, int cantidad, string formato, double tamano, string urlDescarga, string idioma)
+    public void RegistrarEbook(string doi, string titulo, string autor, string genero, int anio, int cantidad, string formato, double tamano, string urlDescarga, string idioma)
     {
-        Ebook nuevoEbook = new Ebook(doi, id, titulo, autor, genero, anio, cantidad, formato, tamano, urlDescarga, idioma);
+        var ebooksExistentes = _ebookRepository.ObtenerTodo();
+        int id = ebooksExistentes.Count > 0 ? ebooksExistentes.Max(e => e.ID) + 1 : 1;
+
+        Ebook nuevoEbook = new Ebook(id, doi, titulo, autor, genero, anio, cantidad, formato, tamano, urlDescarga, idioma);
         _ebookRepository.Agregar(nuevoEbook);
     }
 

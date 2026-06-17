@@ -11,6 +11,12 @@ public class BookJsonRepository : IBookRepository
     {
         _rutaArchivo = rutaArchivo;
 
+
+        string directorio = System.IO.Path.GetDirectoryName(_rutaArchivo);
+        if (!string.IsNullOrEmpty(directorio) && !System.IO.Directory.Exists(directorio))
+            System.IO.Directory.CreateDirectory(directorio);
+
+        
         if (!File.Exists(_rutaArchivo))
             File.WriteAllText(_rutaArchivo, "[]");
     }
@@ -40,13 +46,13 @@ public class BookJsonRepository : IBookRepository
     {
         List<Book> books = LeerArchivo();
 
-        
+
         int index = books.FindIndex(b => b.ISBN == libroModificado.ISBN);
 
         if (index == -1)
             throw new ArgumentException("Libro no encontrado.");
 
-        
+
         books[index] = libroModificado;
 
         GuardarTodo(books);
@@ -97,7 +103,7 @@ public class BookJsonRepository : IBookRepository
 
     public List<Book> ObtenerTodo()
     {
-      return LeerArchivo();
+        return LeerArchivo();
     }
 
     public List<Book> OrdenarTodo(Func<Book, object> criterio)

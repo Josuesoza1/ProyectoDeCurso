@@ -7,8 +7,12 @@
         _userRepository = userRepository;
     }
 
-    public void RegistrarUser(int id, string nombre, string apellido, string correo, string telefono)
+    public void RegistrarUser(string nombre, string apellido, string correo, string telefono)
     {
+        var usuarioExistente = _userRepository.ObtenerTodo();
+
+        int id = usuarioExistente.Count > 0 ? usuarioExistente.Max(u => u.Id) + 1 : 1;
+
         User nuevoUsuario = new User(id, nombre, apellido, correo, telefono);
         _userRepository.Agregar(nuevoUsuario);
     }

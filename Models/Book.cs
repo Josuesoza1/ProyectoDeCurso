@@ -48,7 +48,7 @@
             _estadoFisico = value;
         }
     }
-    public Book(int iD, string? titulo, string? autor, string? genero, int anio, int cantidad, string isbn, int numeroDePaginas, string? editorial, string estadoFisico = "Bueno") 
+    public Book(int iD, string isbn, string? titulo, string? autor, string? genero, int anio, int cantidad, int numeroDePaginas, string? editorial, string estadoFisico = "Bueno") 
         : base(iD, titulo, autor, genero, anio, cantidad)
     {
         ISBN = isbn;
@@ -77,6 +77,8 @@
                $"   Físico  : {NumeroDePaginas} págs. | Estado: {EstadoFisico} | ISBN: {ISBN}\n" +
                $"   Estatus : {estado}\n" +
                $"   {new string('-', 55)}";
+
+        
     }
 }
 

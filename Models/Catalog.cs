@@ -115,6 +115,24 @@
         Disponible = true; 
     }
 
+    public void ActualizarCantidad(int nuevaCantidad)
+    {
+        if (nuevaCantidad < 0)
+            throw new ArgumentException("La cantidad no puede ser negativa.");
+
+        Cantidad = nuevaCantidad;
+
+        
+        if (Cantidad > 0)
+        {
+            Disponible = true;
+        }
+        else
+        {
+            Disponible = false;
+        }
+    }
+
 
     public abstract string TipoItem();
 

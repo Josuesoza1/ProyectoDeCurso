@@ -5,9 +5,7 @@
     private string _apellido = string.Empty;
     private string _correo = string.Empty;
     private string _telefono = string.Empty;
-    private DateTime FechaRegistro;
-    private List<int> historialPrestamoIds;
-
+    
     public int Id
     {
         get => _id;
@@ -70,10 +68,7 @@
         }
     }
 
-    public DateTime FechaRegistro1 { get => FechaRegistro; private set => FechaRegistro = value; }
-    public List<int> HistorialPrestamoIds { get => historialPrestamoIds; private set => historialPrestamoIds = value; }
-
-
+    
 
     public User(int id, string? nombre, string? apellido, string? correo, string? telefono)
     {

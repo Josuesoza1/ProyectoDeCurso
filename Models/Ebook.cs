@@ -65,14 +65,14 @@
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("El idioma no puede estar vacío");
-            if (value.ToUpper() != "Es" && value.ToUpper() != "EN" && value.ToUpper() != "FR" && value.ToUpper() != "PT")
+            if (value.ToUpper() != "ES" && value.ToUpper() != "EN" && value.ToUpper() != "FR" && value.ToUpper() != "PT")
                 throw new ArgumentException("El idioma no es válido. Usa ES, EN, FR o PT.");
             _idioma = value.ToUpper();
         }
     }
 
 
-    public Ebook(string dOI, int iD, string? titulo, string? autor, string? genero,
+    public Ebook( int iD, string dOI, string? titulo, string? autor, string? genero,
         int anio, int cantidad, string formato, double tamano, 
         string urlDescarga, string idioma) :
         base(iD, titulo, autor, genero, anio, cantidad)

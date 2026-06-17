@@ -8,10 +8,14 @@ public class EbookJsonRepository : IEbookRepository
     {
         _rutaArchivo = rutaArchivo;
 
+        string directorio = System.IO.Path.GetDirectoryName(_rutaArchivo);
+
+        if (!string.IsNullOrEmpty(directorio) && !System.IO.Directory.Exists(directorio))
+            System.IO.Directory.CreateDirectory(directorio);
+
         if (!File.Exists(_rutaArchivo))
             File.WriteAllText(_rutaArchivo, "[]");
     }
-
     public void GuardarTodo(List<Ebook> ebook)
     {
         string json = JsonSerializer.Serialize(ebook,

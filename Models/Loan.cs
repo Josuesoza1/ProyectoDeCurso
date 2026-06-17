@@ -14,7 +14,7 @@ public class Loan
     public int IdPrestamo
     {
         get => _idPrestamo;
-       private set
+        private set
         {
             if (value < 0)
                 throw new ArgumentException("El id no puede ser negativo");
@@ -74,21 +74,11 @@ public class Loan
     {
         get
         {
-            if (FechaDevolucionReal.HasValue)
-            {
-                return "Devuelto";
-            }
-
-            if (DateTime.Now > FechaDevolucionEsperada)
-            {
-                return "Vencido";
-            }
-
+            if (FechaDevolucionReal.HasValue) return "Devuelto";
+            if (DateTime.Today > FechaDevolucionEsperada.Date) return "Vencido";
             return "Activo";
         }
     }
-
-
 
     public void RegistrarDevolucion(DateTime fechaDevolucion, string nuevasObservaciones)
     {
@@ -123,10 +113,9 @@ public class Loan
     public override string ToString()
     {
         string devolucion = FechaDevolucionReal.HasValue
-            ? FechaDevolucionReal.Value.ToString("dd/MM/yyyy")
-            : "Pendiente";
+            ? $"¡Entregado el {FechaDevolucionReal.Value:dd/MM/yyyy}!"
+            : "Pendiente (No devuelto aún)";
 
-        
         string alerta = EstaVencido ? " ¡ATENCIÓN: VENCIDO!" : "";
 
         return $" PRÉSTAMO #{IdPrestamo}\n" +
@@ -134,6 +123,7 @@ public class Loan
                $"   Fechas    : Prestado el {FechaPrestamo:dd/MM/yyyy} -> Vence el {FechaDevolucionEsperada:dd/MM/yyyy}\n" +
                $"   Devolución: {devolucion}\n" +
                $"   Estado    : {Estado.ToUpper()}{alerta}\n" +
+               $"   Notas     : {Observaciones}\n" + 
                $"   {new string('-', 55)}";
     }
 }
