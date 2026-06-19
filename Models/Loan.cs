@@ -11,7 +11,16 @@ public class Loan
     private DateTime _fechaPrestamo;
     private DateTime _fechaDevolucionEsperada;
     private DateTime? _fechaDevolucionReal;
+    private string? _tituloItem;
 
+    /// <summary>
+    /// Título exacto del libro o ebook al momento del préstamo.
+    /// </summary>
+    public string? TituloItem
+    {
+        get => _tituloItem;
+        private set => _tituloItem = ValidarTexto(value, "tituloItem");
+    }
     /// <summary>
     /// Clave primaria del registro transaccional.
     /// </summary>
@@ -21,7 +30,7 @@ public class Loan
         private set
         {
             if (value < 0)
-                throw new ArgumentException("El id invalido");
+                throw new ArgumentException("El id no puede ser negativo");
             _idPrestamo = value;
         }
     }
@@ -90,12 +99,13 @@ public class Loan
     /// <summary>
     /// Constructor formal para inicializar el historial o nuevo préstamo.
     /// </summary>
-    public Loan(int idPrestamo, int usuarioID, int itemID, string? tipoItem, string? observaciones, DateTime fechaPrestamo, DateTime fechaDevolucionEsperada, DateTime? fechaDevolucionReal)
+    public Loan(int idPrestamo, int usuarioID, int itemID, string? tipoItem,string tituloItem, string? observaciones, DateTime fechaPrestamo, DateTime fechaDevolucionEsperada, DateTime? fechaDevolucionReal)
     {
         IdPrestamo = idPrestamo;
         UsuarioID = usuarioID;
         ItemID = itemID;
         TipoItem = tipoItem;
+        TituloItem = tituloItem;
         Observaciones = observaciones;
         FechaPrestamo = fechaPrestamo;
         FechaDevolucionEsperada = fechaDevolucionEsperada;
@@ -154,7 +164,7 @@ public class Loan
         string devolucion = FechaDevolucionReal.HasValue ? $"¡Entregado el {FechaDevolucionReal.Value:dd/MM/yyyy}!" : "Pendiente (No devuelto aún)";
         string alerta = EstaVencido ? " ¡ATENCIÓN: VENCIDO!" : "";
         return $" PRÉSTAMO #{IdPrestamo}\n" +
-               $"   Usuario ID: {UsuarioID,-5} | Ítem ID: {ItemID} ({TipoItem})\n" +
+               $"   Usuario ID: {UsuarioID,-5} | Ítem ID: {ItemID} - {TituloItem} ({TipoItem})\n"+
                $"   Fechas    : Prestado el {FechaPrestamo:dd/MM/yyyy} -> Vence el {FechaDevolucionEsperada:dd/MM/yyyy}\n" +
                $"   Devolución: {devolucion}\n" +
                $"   Estado    : {Estado.ToUpper()}{alerta}\n" +

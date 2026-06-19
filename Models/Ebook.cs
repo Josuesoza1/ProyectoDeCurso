@@ -63,8 +63,12 @@ public class Ebook : Catalog
         get => _urlDescarga;
         private set
         {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("La URL no puede estar vacía.");
+
             if (!value.ToLower().StartsWith("http://") && !value.ToLower().StartsWith("https://"))
                 throw new ArgumentException("La URL debe empezar con http:// o https://");
+
             _urlDescarga = value;
         }
     }

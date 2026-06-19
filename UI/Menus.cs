@@ -154,7 +154,24 @@ public class Menus
                             {
                                 Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] La cantidad debe ser un número entero mayor o igual a 0.\n"); Console.ResetColor();
                             }
-                            else { libro.ActualizarCantidad(nuevaCantidad); break; }
+                            else
+                            {
+                                int prestamosActivos = _loanservice.ObtenerTodo()
+                                    .Count(p => p.ItemID == libro.ID && p.TipoItem == "Libro Físico" && !p.FechaDevolucionReal.HasValue);
+
+                                if (nuevaCantidad < prestamosActivos)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine($"\n[ERROR] No puedes reducir el stock a {nuevaCantidad}. Actualmente hay {prestamosActivos} copias prestadas a usuarios.");
+                                    Console.ResetColor();
+                                }
+                                else
+                                {
+                                    libro.ActualizarCantidad(nuevaCantidad);
+                                    break;
+                                }
+                            }
+                            
                         }
 
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -327,7 +344,23 @@ public class Menus
                             {
                                 Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] La cantidad debe ser un número entero mayor o igual a 0.\n"); Console.ResetColor();
                             }
-                            else { ebook.ActualizarCantidad(nuevaCantidad); break; }
+                            else
+                            {
+                                int prestamosActivos = _loanservice.ObtenerTodo()
+                                    .Count(p => p.ItemID == ebook.ID && p.TipoItem == "Ebook" && !p.FechaDevolucionReal.HasValue);
+
+                                if (nuevaCantidad < prestamosActivos)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine($"\n[ERROR] No puedes reducir el stock a {nuevaCantidad}. Actualmente hay {prestamosActivos} copias prestadas a usuarios.");
+                                    Console.ResetColor();
+                                }
+                                else
+                                {
+                                    ebook.ActualizarCantidad(nuevaCantidad);
+                                    break;
+                                }
+                            }
                         }
                         Console.ForegroundColor = ConsoleColor.Green;
                         _ebookservice.ActualizarEbook(ebook);
@@ -824,6 +857,17 @@ public class Menus
                             _uiconsole.PresioneParaContinuar();
                             break;
                         }
+                        bool libroPrestado = _loanservice.ObtenerTodo()
+                            .Any(p => p.ItemID == libroeliminado.ID && p.TipoItem == "Libro Físico" && !p.FechaDevolucionReal.HasValue);
+                        if (libroPrestado)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\n[OPERACIÓN DENEGADA] No se puede eliminar este libro del catálogo.");
+                            Console.WriteLine("Existen copias de este libro que están prestadas a usuarios y no han sido devueltas.");
+                            Console.ResetColor();
+                            _uiconsole.PresioneParaContinuar();
+                            break;
+                        }
                         _bookservice.EliminarBook(isbnEliminar);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Libro eliminado con exito");
@@ -1281,6 +1325,13 @@ public class Menus
                             Console.WriteLine("[ERROR] El correo debe contener '@' y '.'. Intente de nuevo.\n");
                             Console.ResetColor();
                         }
+                        bool correoOcupado = _userservice.ObtenerTodo().Any(u => u.Correo == nuevoCorreo && u.Id != usuario.Id);
+                        if (correoOcupado)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("[ERROR] El correo le pertenece a otro usuario.\n");
+                            Console.ResetColor();
+                        }
                         else { usuario.ActualizarCorreo(nuevoCorreo); break; }
                     }
                     break;
@@ -1298,6 +1349,13 @@ public class Menus
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("[ERROR] Teléfono inválido. Debe tener 8 números y empezar con 5, 7 u 8.\n");
+                            Console.ResetColor();
+                        }
+                        bool telefonoOcupado= _userservice.ObtenerTodo().Any(u => u.Telefono == nuevoTelefono && u.Id != usuario.Id);
+                        if (telefonoOcupado)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("[ERROR] El telefono le pertenece a otro usuario.\n");
                             Console.ResetColor();
                         }
                         else { usuario.ActualizarTelefono(nuevoTelefono); break; }
@@ -1523,23 +1581,37 @@ public class Menus
                             }
                             else break;
                         }
-
-
                         string correo;
                         while (true)
                         {
                             Console.WriteLine("Ingrese el correo electrónico del usuario:");
                             correo = (Console.ReadLine() ?? "").Trim();
 
+                           
                             if (string.IsNullOrWhiteSpace(correo) || !correo.Contains("@") || !correo.Contains("."))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("[ERROR] El correo debe contener '@' y '.'. Intente de nuevo.\n");
                                 Console.ResetColor();
                             }
-                            else break;
-                        }
+                            else
+                            {
+                                
+                                bool correoExiste = _userservice.ObtenerTodo().Any(u => u.Correo != null && u.Correo.Equals(correo, StringComparison.OrdinalIgnoreCase));
 
+                                if (correoExiste)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("[ERROR] Ya existe un usuario registrado con este correo electrónico. Intente con otro.\n");
+                                    Console.ResetColor();
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                        
                         string telefono;
                         while (true)
                         {
@@ -1589,36 +1661,49 @@ public class Menus
 
                         break;
                     case 4:
-                        int idEliminar = 0;
-                        bool cancelarUsuario = false;
-                        while (true)
+                        try
                         {
-                            Console.Write("Ingrese el ID del usuario a eliminar (o Enter para cancelar): ");
-                            string entradaEliminar = (Console.ReadLine() ?? "").Trim();
-
-                            if (string.IsNullOrWhiteSpace(entradaEliminar))
+                            Console.Clear();
+                            Console.WriteLine("=== ELIMINAR USUARIO ===");
+                            Console.WriteLine("Ingrese el ID del usuario a eliminar:");
+                            if (!int.TryParse(Console.ReadLine(), out int idEliminar))
                             {
-                                Console.WriteLine("Operación cancelada.");
-                                cancelarUsuario = true;
+                                Console.WriteLine("ID inválido.");
+                                _uiconsole.PresioneParaContinuar();
                                 break;
                             }
 
-                            if (!int.TryParse(entradaEliminar, out idEliminar) || idEliminar <= 0)
+                            User usuarioAEliminar = _userservice.BuscarPorId(idEliminar);
+                            if (usuarioAEliminar == null)
                             {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("[ERROR] El ID debe ser un número entero positivo.\n");
-                                Console.ResetColor();
+                                Console.WriteLine("\n[ERROR] El usuario no existe en el sistema.");
+                                _uiconsole.PresioneParaContinuar();
+                                break;
                             }
-                            else break;
-                        }
-                        if (cancelarUsuario)
-                        { break; }
 
-                        _userservice.EliminarUser(idEliminar);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("\nUsuario eliminado exitosamente.");
-                        Console.ResetColor();
-                        _uiconsole.PresioneParaContinuar();
+                            bool tienePrestamosPendientes = _loanservice.ObtenerTodo()
+                                .Any(p => p.UsuarioID == idEliminar && !p.FechaDevolucionReal.HasValue);
+
+                            if (tienePrestamosPendientes)
+                            {
+                                Console.WriteLine($"\n[OPERACIÓN DENEGADA]");
+                                Console.WriteLine($"No se puede eliminar a {usuarioAEliminar.NombreCompleto}.");
+                                Console.WriteLine("El usuario tiene artículos prestados que aún no ha devuelto al sistema.");
+                                _uiconsole.PresioneParaContinuar();
+                                break; 
+                            }
+
+                            _userservice.EliminarUser(idEliminar);
+                            Console.WriteLine($"\n¡Éxito! El usuario {usuarioAEliminar.NombreCompleto} ha sido eliminado.");
+
+                            Console.WriteLine("\n=== LISTA ACTUALIZADA ===");
+                            _uiconsole.MostrarUser(_userservice.ObtenerTodo());
+                            _uiconsole.PresioneParaContinuar();
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            Console.WriteLine($"\nError: {ex.Message}");
+                        }
                         break;
                     case 5:
                         MenuConsultasUsuarios();
@@ -1773,9 +1858,9 @@ public class Menus
                             else break;
                         }
                         string tipoItem = "";
-
+                        string tituloItem = "";
                         bool yaTieneElItem = _loanservice.ObtenerTodo()
-.Any(p => p.UsuarioID == idUsuario && p.ItemID == idItem && p.TipoItem == tipoItem && !p.FechaDevolucionReal.HasValue);
+.Any(p => p.UsuarioID == idUsuario && p.ItemID == idItem && p.TipoItem == tipoItem &&!p.FechaDevolucionReal.HasValue);
                         if (yaTieneElItem)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
@@ -1832,7 +1917,7 @@ public class Menus
                         else if (itemAPrestar is Ebook ebook)
                             _ebookservice.ActualizarEbook(ebook);
 
-                        _loanservice.RegistrarLoan(idUsuario, idItem, tipoItem, 14);
+                        _loanservice.RegistrarLoan(idUsuario, idItem, tipoItem, itemAPrestar.Titulo!, 14);
 
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"\n¡Éxito! Préstamo registrado a nombre de: {usuario.NombreCompleto}");
@@ -1947,7 +2032,7 @@ public class Menus
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\n--- Usuarios Ordenados (A-Z) ---");
             Console.ResetColor();
-            var ordenados = _userservice.OrdenarUsuarios(u => u.Nombre);
+            var ordenados = _userservice.OrdenarUsuarios(u => u.Nombre!);
             _uiconsole.MostrarUser(ordenados);
             _uiconsole.PresioneParaContinuar();
         }

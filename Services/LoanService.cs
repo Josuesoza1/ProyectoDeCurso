@@ -16,7 +16,7 @@ public class LoanService
     /// <summary>
     /// Registra una nueva transacción de préstamo calculando las fechas de inicio y vencimiento.
     /// </summary>
-    public void RegistrarLoan(int usuarioId, int itemId, string tipoItem, int diasPrestamo = 14)
+    public void RegistrarLoan(int usuarioId, int itemId, string tipoItem, string tituloItem, int diasPrestamo = 14)
     {
         DateTime fechaInicio = DateTime.Today;
         DateTime fechaVencimiento = fechaInicio.AddDays(diasPrestamo);
@@ -24,10 +24,9 @@ public class LoanService
         var prestamosExistentes = _loanRepository.ObtenerTodo();
         int id = prestamosExistentes.Count > 0 ? prestamosExistentes.Max(p => p.IdPrestamo) + 1 : 1;
 
-        Loan nuevoPrestamo = new Loan(id, usuarioId, itemId, tipoItem, "Esperando", fechaInicio, fechaVencimiento, null);
+        Loan nuevoPrestamo = new Loan(id, usuarioId, itemId, tipoItem, tituloItem, "Esperando", fechaInicio, fechaVencimiento, null);
         _loanRepository.Agregar(nuevoPrestamo);
     }
-
     /// <summary>
     /// Actualiza el estado transaccional de un préstamo (devoluciones, notas).
     /// </summary>
