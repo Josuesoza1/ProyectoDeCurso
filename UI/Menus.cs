@@ -1,4 +1,9 @@
-﻿public class Menus
+﻿using System.Net.Mail;
+
+/// <summary>
+/// Clase en la que se almacenan los menú para invocarlos en el program
+/// </summary>
+public class Menus
 {
     private readonly LibrarySystem _sistema;
     private readonly UiConsole _uiconsole;
@@ -7,7 +12,14 @@
     private readonly LoanService _loanservice;
     private readonly UserService _userservice;
 
-
+    /// <summary>
+    /// Constructor el cual nos permite usar las clases en las que están guardada la mayoria de operaciones.
+    /// </summary>
+    /// <param name="bookservice"></param>
+    /// <param name="ebookservice"></param>
+    /// <param name="loanservice"></param>
+    /// <param name="userservice"></param>
+    /// <param name="uiconsole"></param>
     public Menus(BookService bookservice, EbookService ebookservice, LoanService loanservice, UserService userservice, UiConsole uiconsole)
     {
         _bookservice = bookservice;
@@ -17,6 +29,10 @@
         _uiconsole = uiconsole;
     }
 
+
+    /// <summary>
+    /// Metodo importante que permite editar parametros de un libro mediante su ISBN
+    /// </summary>
     public void EditarLibro()
     {
         try
@@ -39,6 +55,14 @@
                     Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos.\n");
                     Console.ResetColor();
                 }
+                if (!isbn.StartsWith("978"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("El ISBN tiene que comenzar con el prefijo 978");
+                    _uiconsole.PresioneParaContinuar();
+                    Console.ResetColor();
+                }
+
                 else break;
             }
 
@@ -80,7 +104,11 @@
                             }
                             else { libro.ActualizarTitulo(nuevoTitulo); break; }
                         }
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _bookservice.ActualizarBook(libro);
+                        Console.WriteLine("El titulo del libro se ha actualizado con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 2:
                         while (true)
@@ -93,7 +121,12 @@
                             }
                             else { libro.ActualizarEditorial(nuevaEditorial); break; }
                         }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _bookservice.ActualizarBook(libro);
+                        Console.WriteLine("La editoria del libro se ha actualizado con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 3:
                         while (true)
@@ -106,7 +139,12 @@
                             }
                             else { libro.ActualizarGenero(nuevoGenero); break; }
                         }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _bookservice.ActualizarBook(libro);
+                        Console.WriteLine("El genero del libro se ha actualizado con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 4:
                         while (true)
@@ -118,7 +156,12 @@
                             }
                             else { libro.ActualizarCantidad(nuevaCantidad); break; }
                         }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _bookservice.ActualizarBook(libro);
+                        Console.WriteLine("El Stock del libro se ha actualizado con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 5:
                         salirEdicion = true;
@@ -148,6 +191,10 @@
             _uiconsole.PresioneParaContinuar();
         }
     }
+
+    /// <summary>
+    /// Metodo de los más importantes que permite actualizar un libro electronico mediante su codigo DOI.
+    /// </summary>
     public void EditarEbook()
     {
         try
@@ -214,7 +261,11 @@
                             }
                             else { ebook.ActualizarTitulo(nuevoTitulo); break; }
                         }
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _ebookservice.ActualizarEbook(ebook);
+                        Console.WriteLine("El titulo se actualizó con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 2:
                         while (true)
@@ -227,7 +278,11 @@
                             }
                             else { ebook.ActualizarURL(nuevaUrl); break; }
                         }
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _ebookservice.ActualizarEbook(ebook);
+                        Console.WriteLine("La URL se actualizó con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 3:
                         while (true)
@@ -240,7 +295,12 @@
                             }
                             else { ebook.ActualizarIdioma(nuevoIdioma); break; }
                         }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _ebookservice.ActualizarEbook(ebook);
+                        Console.WriteLine("El Idioma se actualizó con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 4:
                         while (true)
@@ -253,7 +313,11 @@
                             }
                             else { ebook.ActualizarFormato(nuevoFormato); break; }
                         }
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _ebookservice.ActualizarEbook(ebook);
+                        Console.WriteLine("El Formato se actualizó con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 5:
                         while (true)
@@ -265,7 +329,11 @@
                             }
                             else { ebook.ActualizarCantidad(nuevaCantidad); break; }
                         }
+                        Console.ForegroundColor = ConsoleColor.Green;
                         _ebookservice.ActualizarEbook(ebook);
+                        Console.WriteLine("El stock de licencias se actualizó con exito");
+                        _uiconsole.PresioneParaContinuar();
+                        Console.ResetColor();
                         break;
                     case 6:
                         salirEdicion = true;
@@ -296,6 +364,9 @@
         }
     }
 
+    /// <summary>
+    /// Metodo que permite mostrar todos los libros y libros eloctronicos registrados.
+    /// </summary>
     public void MostrarCatalogoCompleto()
     {
         try
@@ -337,6 +408,9 @@
     }
 
 
+    /// <summary>
+    /// Metodo para realizar  consultas a traves de parametros en el catalogo general.
+    /// </summary>
     public void MenuConsultasCatalogo()
     {
         bool volver = false;
@@ -727,6 +801,7 @@
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos.\n");
+                                _uiconsole.PresioneParaContinuar();
                                 Console.ResetColor();
                             }
                             else break;
@@ -734,9 +809,12 @@
 
                         if (cancelarLibro) break;
 
+                        var libroeliminado = _bookservice.BuscarPorISBN(isbnEliminar);
                         _bookservice.EliminarBook(isbnEliminar);
-                        Console.WriteLine($"\nLista Actualizada después de la eliminación del libro con ISBN {isbnEliminar}.");
-                        _uiconsole.MostrarLibros(_bookservice.ObtenerTodo());
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Libro eliminado con exito");
+                        Console.WriteLine("El libro eliminado fue:");
+                        _uiconsole.MostrarLibros(new List<Book> { libroeliminado });
                         _uiconsole.PresioneParaContinuar();
                         break;
                     case 5:
@@ -816,7 +894,7 @@
                             else break;
                         }
 
-                        // Aborta el case 1 completo si el usuario presionó Enter
+                        
                         if (string.IsNullOrWhiteSpace(doi))
                         {
                             Console.WriteLine("Operación cancelada.");
@@ -995,7 +1073,7 @@
                         }
 
                         if (cancelarEbook) break;
-
+                        
                         _ebookservice.EliminarEbook(doiEliminar);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("\nEbook eliminado exitosamente.");
