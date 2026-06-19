@@ -138,13 +138,15 @@ public abstract class Catalog
     }
 
     /// <summary>
-    /// Modifica de forma administrativa la cantidad total de artículos existentes.
+    /// Ajusta el stock sumando (compras) o restando (pérdidas/daños) a la cantidad actual.
     /// </summary>
-    public void ActualizarCantidad(int nuevaCantidad)
+    public void ActualizarCantidad(int ajusteStock)
     {
-        if (nuevaCantidad < 0)
-            throw new ArgumentException("La cantidad no puede ser negativa.");
-        Cantidad = nuevaCantidad;
+        int nuevoTotal = Cantidad + ajusteStock;
+        if (nuevoTotal < 0)
+            throw new ArgumentException("El ajuste dejaría el inventario en negativo, operación denegada.");
+
+        Cantidad = nuevoTotal;
         Disponible = Cantidad > 0;
     }
 

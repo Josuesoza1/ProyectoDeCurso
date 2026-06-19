@@ -49,11 +49,10 @@ public class User
         get => _correo;
         private set
         {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("El correo no puede estar vacío");
-            if (!value.Contains("@") || !value.Contains("."))
-                throw new ArgumentException("El correo debe contener '@' y '.'");
-            _correo = value;
+            string correoLimpio = (value ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(correoLimpio) || !correoLimpio.Contains("@") || !correoLimpio.Contains(".") || correoLimpio.Length < 5)
+                throw new ArgumentException("El correo debe contener '@', '.' y ser una dirección válida.");
+            _correo = correoLimpio;
         }
     }
 

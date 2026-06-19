@@ -20,6 +20,8 @@ public class Book : Catalog
                 throw new ArgumentException("El ISBN no puede estar vacío");
             if (value.Length != 13)
                 throw new ArgumentException("El ISBN Debe contener exactamente 13 digitos");
+            if (!value.StartsWith("978"))
+                throw new ArgumentException("El ISBN tiene que empezar con 978");
             _iSBN = value;
         }
     }
@@ -32,8 +34,8 @@ public class Book : Catalog
         get => _numeroDePaginas;
         private set
         {
-            if (value < 0)
-                throw new ArgumentException("La cantidad de paginas no puede ser negativa");
+            if (value <= 0)
+                throw new ArgumentException("La cantidad de paginas no puede ser negativa ni 0");
             _numeroDePaginas = value;
         }
     }

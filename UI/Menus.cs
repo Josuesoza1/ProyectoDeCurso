@@ -1,8 +1,4 @@
-﻿/// <summary>
-/// Clase principal de la capa de interfaz de usuario que orquesta la navegación, 
-/// los formularios de captura y las validaciones en caliente de todo el sistema.
-/// </summary>
-public class Menus
+﻿public class Menus
 {
     private readonly LibrarySystem _sistema;
     private readonly UiConsole _uiconsole;
@@ -21,10 +17,6 @@ public class Menus
         _uiconsole = uiconsole;
     }
 
-    /// <summary>
-    /// Solicita de forma validada el ISBN de un libro físico, busca su coincidencia y despliega un formulario 
-    /// interactivo para actualizar en caliente y de forma segura sus propiedades.
-    /// </summary>
     public void EditarLibro()
     {
         try
@@ -32,9 +24,16 @@ public class Menus
             string isbn;
             while (true)
             {
-                Console.Write("Ingrese el ISBN del libro que desea modificar: ");
+                Console.Write("Ingrese el ISBN del libro que desea modificar (o Enter para cancelar): ");
                 isbn = Console.ReadLine()?.Trim();
-                if (string.IsNullOrWhiteSpace(isbn) || isbn.Length != 13 || !isbn.All(char.IsDigit))
+
+                if (string.IsNullOrWhiteSpace(isbn))
+                {
+                    Console.WriteLine("Operación cancelada.");
+                    return;
+                }
+
+                if (isbn.Length != 13 || !isbn.All(char.IsDigit))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos.\n");
@@ -51,109 +50,104 @@ public class Menus
                 return;
             }
 
-            Console.WriteLine("\nLibro actual:");
-            Console.WriteLine(libro.ToString());
-
-            Console.WriteLine("\n¿Qué dato desea actualizar?");
-            Console.WriteLine("1. Título: ");
-            Console.WriteLine("2. Editorial: ");
-            Console.WriteLine("3. Género: ");
-            Console.WriteLine("4. Cantidad en stock: ");
-            Console.WriteLine("5. Regresar");
-            Console.Write("Opción: ");
-
-            int opcion = int.TryParse(Console.ReadLine(), out int resultado) ? resultado : 0;
-
-            switch (opcion)
+            bool salirEdicion = false;
+            do
             {
-                case 1:
-                    while (true)
-                    {
-                        Console.Write("Nuevo título: ");
-                        string nuevoTitulo = Console.ReadLine()?.Trim();
-                        if (string.IsNullOrWhiteSpace(nuevoTitulo) || nuevoTitulo.Length < 2)
+                Console.Clear();
+                Console.WriteLine("\nLibro actual:");
+                Console.WriteLine(libro.ToString());
+
+                Console.WriteLine("\n¿Qué dato desea actualizar?");
+                Console.WriteLine("1. Título ");
+                Console.WriteLine("2. Editorial ");
+                Console.WriteLine("3. Género ");
+                Console.WriteLine("4. Cantidad en stock ");
+                Console.WriteLine("5. Regresar al menú anterior");
+                Console.Write("Opción: ");
+
+                int opcion = int.TryParse(Console.ReadLine(), out int resultado) ? resultado : 0;
+
+                switch (opcion)
+                {
+                    case 1:
+                        while (true)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] El título es inválido o muy corto.\n");
-                            Console.ResetColor();
+                            Console.Write("Nuevo título: ");
+                            string nuevoTitulo = Console.ReadLine()?.Trim();
+                            if (string.IsNullOrWhiteSpace(nuevoTitulo) || nuevoTitulo.Length < 2)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] El título es inválido o muy corto.\n"); Console.ResetColor();
+                            }
+                            else { libro.ActualizarTitulo(nuevoTitulo); break; }
                         }
-                        else { libro.ActualizarTitulo(nuevoTitulo); break; }
-                    }
-                    break;
-                case 2:
-                    while (true)
-                    {
-                        Console.Write("Nueva editorial: ");
-                        string nuevaEditorial = Console.ReadLine()?.Trim();
-                        if (string.IsNullOrWhiteSpace(nuevaEditorial) || nuevaEditorial.Length < 2)
+                        _bookservice.ActualizarBook(libro);
+                        break;
+                    case 2:
+                        while (true)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] La editorial es inválida o muy corta.\n");
-                            Console.ResetColor();
+                            Console.Write("Nueva editorial: ");
+                            string nuevaEditorial = Console.ReadLine()?.Trim();
+                            if (string.IsNullOrWhiteSpace(nuevaEditorial) || nuevaEditorial.Length < 2)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] La editorial es inválida o muy corta.\n"); Console.ResetColor();
+                            }
+                            else { libro.ActualizarEditorial(nuevaEditorial); break; }
                         }
-                        else { libro.ActualizarEditorial(nuevaEditorial); break; }
-                    }
-                    break;
-                case 3:
-                    while (true)
-                    {
-                        Console.Write("Nuevo género: ");
-                        string nuevoGenero = Console.ReadLine()?.Trim();
-                        if (string.IsNullOrWhiteSpace(nuevoGenero) || nuevoGenero.Length < 2)
+                        _bookservice.ActualizarBook(libro);
+                        break;
+                    case 3:
+                        while (true)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] El género es inválido o muy corto.\n");
-                            Console.ResetColor();
+                            Console.Write("Nuevo género: ");
+                            string nuevoGenero = Console.ReadLine()?.Trim();
+                            if (string.IsNullOrWhiteSpace(nuevoGenero) || nuevoGenero.Length < 2)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] El género es inválido o muy corto.\n"); Console.ResetColor();
+                            }
+                            else { libro.ActualizarGenero(nuevoGenero); break; }
                         }
-                        else { libro.ActualizarGenero(nuevoGenero); break; }
-                    }
-                    break;
-                case 4:
-                    while (true)
-                    {
-                        Console.Write("Nueva cantidad en stock: ");
-                        if (!int.TryParse(Console.ReadLine(), out int nuevaCantidad) || nuevaCantidad < 0)
+                        _bookservice.ActualizarBook(libro);
+                        break;
+                    case 4:
+                        while (true)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] La cantidad debe ser un número entero mayor o igual a 0.\n");
-                            Console.ResetColor();
+                            Console.Write("Nueva cantidad en stock: ");
+                            if (!int.TryParse(Console.ReadLine(), out int nuevaCantidad) || nuevaCantidad < 0)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] La cantidad debe ser un número entero mayor o igual a 0.\n"); Console.ResetColor();
+                            }
+                            else { libro.ActualizarCantidad(nuevaCantidad); break; }
                         }
-                        else { libro.ActualizarCantidad(nuevaCantidad); break; }
-                    }
-                    break;
-                case 5:
-                    Console.WriteLine("Operación cancelada.");
-                    _uiconsole.PresioneParaContinuar();
-                    return;
-                default:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Opción no válida. Cancelando Operación...");
-                    Console.ResetColor();
-                    _uiconsole.PresioneParaContinuar();
-                    return;
-            }
-            _bookservice.ActualizarBook(libro);
-            Console.WriteLine("\n¡Libro actualizado correctamente!");
-            _uiconsole.PresioneParaContinuar();
+                        _bookservice.ActualizarBook(libro);
+                        break;
+                    case 5:
+                        salirEdicion = true;
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Opción no válida.");
+                        Console.ResetColor();
+                        _uiconsole.PresioneParaContinuar();
+                        break;
+                }
+            } while (!salirEdicion);
         }
         catch (ArgumentException ex)
         {
             Console.WriteLine($"\nError al actualizar: {ex.Message}");
+            _uiconsole.PresioneParaContinuar();
         }
         catch (InvalidOperationException ex)
         {
             Console.WriteLine($"\nError: {ex.Message}");
+            _uiconsole.PresioneParaContinuar();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"\nError inesperado: {ex.Message}");
+            _uiconsole.PresioneParaContinuar();
         }
     }
-
-    /// <summary>
-    /// Solicita de forma validada el código DOI de un ebook, busca su coincidencia y despliega un formulario 
-    /// interactivo para modificar en caliente sus atributos digitales o stock de licencias.
-    /// </summary>
     public void EditarEbook()
     {
         try
@@ -163,9 +157,17 @@ public class Menus
             string doi;
             while (true)
             {
-                Console.Write("Ingrese el DOI del Ebook que desea modificar: ");
-                doi = Console.ReadLine()?.Trim();
-                if (string.IsNullOrWhiteSpace(doi) || !doi.StartsWith("10.") || !doi.Contains("/"))
+                Console.Write("Ingrese el DOI del Ebook que desea modificar (o Enter para cancelar): ");
+                doi = (Console.ReadLine() ?? "").Trim();
+
+                if (string.IsNullOrWhiteSpace(doi))
+                {
+                    Console.WriteLine("Operación cancelada.");
+                    return;
+                }
+
+
+                if (!doi.StartsWith("10.") || !doi.Contains("/") || doi.EndsWith("/"))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("[ERROR] DOI inválido. Formato esperado ej. 10.1000/xyz123\n");
@@ -173,7 +175,6 @@ public class Menus
                 }
                 else break;
             }
-
             Ebook ebook = _ebookservice.Busqueda(doi);
 
             if (ebook == null)
@@ -182,125 +183,119 @@ public class Menus
                 Console.ReadKey();
                 return;
             }
-            Console.WriteLine("\nDatos actuales del Ebook:");
-            Console.WriteLine(ebook.ToString());
 
-            Console.WriteLine("\n¿Qué dato desea actualizar?");
-            Console.WriteLine("1. Título");
-            Console.WriteLine("2. URL de Descarga");
-            Console.WriteLine("3. Idioma");
-            Console.WriteLine("4. Formato (PDF/EPUB/MOBI)");
-            Console.WriteLine("5. Editar stock de licencias (Cantidad de copias disponibles)");
-            Console.WriteLine("6. Regresar");
-            Console.Write("Opción: ");
-
-            int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
-            switch (opcion)
+            bool salirEdicion = false;
+            do
             {
-                case 1:
-                    while (true)
-                    {
-                        Console.Write("Nuevo título: ");
-                        string nuevoTitulo = Console.ReadLine()?.Trim();
-                        if (string.IsNullOrWhiteSpace(nuevoTitulo) || nuevoTitulo.Length < 2)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] El título no puede quedar en blanco ni ser tan corto.\n");
-                            Console.ResetColor();
-                        }
-                        else { ebook.ActualizarTitulo(nuevoTitulo); break; }
-                    }
-                    break;
-                case 2:
-                    while (true)
-                    {
-                        Console.Write("Nueva URL (http/https): ");
-                        string nuevaUrl = Console.ReadLine()?.Trim();
-                        if (string.IsNullOrWhiteSpace(nuevaUrl) || (!nuevaUrl.StartsWith("http://") && !nuevaUrl.StartsWith("https://")))
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] URL inválida. Asegúrese de incluir http:// o https://\n");
-                            Console.ResetColor();
-                        }
-                        else { ebook.ActualizarURL(nuevaUrl); break; }
-                    }
-                    break;
-                case 3:
-                    while (true)
-                    {
-                        Console.Write("Nuevo idioma (ES/EN/FR/PT): ");
-                        string nuevoIdioma = Console.ReadLine()?.Trim().ToUpper();
-                        if (nuevoIdioma != "ES" && nuevoIdioma != "EN" && nuevoIdioma != "FR" && nuevoIdioma != "PT")
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] Solo se admiten los idiomas ES, EN, FR o PT.\n");
-                            Console.ResetColor();
-                        }
-                        else { ebook.ActualizarIdioma(nuevoIdioma); break; }
-                    }
-                    break;
-                case 4:
-                    while (true)
-                    {
-                        Console.Write("Nuevo formato (PDF/EPUB/MOBI): ");
-                        string nuevoFormato = Console.ReadLine()?.Trim().ToUpper();
-                        if (nuevoFormato != "PDF" && nuevoFormato != "EPUB" && nuevoFormato != "MOBI")
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] Solo se admiten formatos PDF, EPUB o MOBI.\n");
-                            Console.ResetColor();
-                        }
-                        else { ebook.ActualizarFormato(nuevoFormato); break; }
-                    }
-                    break;
-                case 5:
-                    while (true)
-                    {
-                        Console.Write("Nueva cantidad de licencias: ");
-                        if (!int.TryParse(Console.ReadLine(), out int nuevaCantidad) || nuevaCantidad < 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] La cantidad debe ser un número entero mayor o igual a 0.\n");
-                            Console.ResetColor();
-                        }
-                        else { ebook.ActualizarCantidad(nuevaCantidad); break; }
-                    }
-                    break;
-                case 6:
-                    Console.WriteLine("Operación Cancelada");
-                    _uiconsole.PresioneParaContinuar();
-                    return;
-                default:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Opción no válida.");
-                    Console.ResetColor();
-                    _uiconsole.PresioneParaContinuar();
-                    return;
-            }
+                Console.Clear();
+                Console.WriteLine("\nDatos actuales del Ebook:");
+                Console.WriteLine(ebook.ToString());
 
-            _ebookservice.ActualizarEbook(ebook);
-            Console.WriteLine("\n¡Ebook actualizado correctamente!");
+                Console.WriteLine("\n¿Qué dato desea actualizar?");
+                Console.WriteLine("1. Título");
+                Console.WriteLine("2. URL de Descarga");
+                Console.WriteLine("3. Idioma");
+                Console.WriteLine("4. Formato (PDF/EPUB/MOBI)");
+                Console.WriteLine("5. Editar stock de licencias");
+                Console.WriteLine("6. Regresar al menú anterior");
+                Console.Write("Opción: ");
 
-            _uiconsole.PresioneParaContinuar();
+                int opcion = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
+                switch (opcion)
+                {
+                    case 1:
+                        while (true)
+                        {
+                            Console.Write("Nuevo título: ");
+                            string nuevoTitulo = Console.ReadLine()?.Trim();
+                            if (string.IsNullOrWhiteSpace(nuevoTitulo) || nuevoTitulo.Length < 2)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] El título no puede quedar en blanco ni ser tan corto.\n"); Console.ResetColor();
+                            }
+                            else { ebook.ActualizarTitulo(nuevoTitulo); break; }
+                        }
+                        _ebookservice.ActualizarEbook(ebook);
+                        break;
+                    case 2:
+                        while (true)
+                        {
+                            Console.Write("Nueva URL (http/https): ");
+                            string nuevaUrl = Console.ReadLine()?.Trim();
+                            if (string.IsNullOrWhiteSpace(nuevaUrl) || (!nuevaUrl.StartsWith("http://") && !nuevaUrl.StartsWith("https://")))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] URL inválida. Asegúrese de incluir http:// o https://\n"); Console.ResetColor();
+                            }
+                            else { ebook.ActualizarURL(nuevaUrl); break; }
+                        }
+                        _ebookservice.ActualizarEbook(ebook);
+                        break;
+                    case 3:
+                        while (true)
+                        {
+                            Console.Write("Nuevo idioma (ES/EN/FR/PT): ");
+                            string nuevoIdioma = Console.ReadLine()?.Trim().ToUpper();
+                            if (nuevoIdioma != "ES" && nuevoIdioma != "EN" && nuevoIdioma != "FR" && nuevoIdioma != "PT")
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] Solo se admiten los idiomas ES, EN, FR o PT.\n"); Console.ResetColor();
+                            }
+                            else { ebook.ActualizarIdioma(nuevoIdioma); break; }
+                        }
+                        _ebookservice.ActualizarEbook(ebook);
+                        break;
+                    case 4:
+                        while (true)
+                        {
+                            Console.Write("Nuevo formato (PDF/EPUB/MOBI): ");
+                            string nuevoFormato = Console.ReadLine()?.Trim().ToUpper();
+                            if (nuevoFormato != "PDF" && nuevoFormato != "EPUB" && nuevoFormato != "MOBI")
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] Solo se admiten formatos PDF, EPUB o MOBI.\n"); Console.ResetColor();
+                            }
+                            else { ebook.ActualizarFormato(nuevoFormato); break; }
+                        }
+                        _ebookservice.ActualizarEbook(ebook);
+                        break;
+                    case 5:
+                        while (true)
+                        {
+                            Console.Write("Nueva cantidad de licencias: ");
+                            if (!int.TryParse(Console.ReadLine(), out int nuevaCantidad) || nuevaCantidad < 0)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] La cantidad debe ser un número entero mayor o igual a 0.\n"); Console.ResetColor();
+                            }
+                            else { ebook.ActualizarCantidad(nuevaCantidad); break; }
+                        }
+                        _ebookservice.ActualizarEbook(ebook);
+                        break;
+                    case 6:
+                        salirEdicion = true;
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Opción no válida.");
+                        Console.ResetColor();
+                        _uiconsole.PresioneParaContinuar();
+                        break;
+                }
+            } while (!salirEdicion);
         }
         catch (ArgumentException ex)
         {
             Console.WriteLine($"\nError al actualizar: {ex.Message}");
+            _uiconsole.PresioneParaContinuar();
         }
         catch (InvalidOperationException ex)
         {
             Console.WriteLine($"\nError: {ex.Message}");
+            _uiconsole.PresioneParaContinuar();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"\nError inesperado: {ex.Message}");
+            _uiconsole.PresioneParaContinuar();
         }
     }
 
-    /// <summary>
-    /// Consulta de manera simultánea los servicios de libros físicos y electrónicos para consolidar 
-    /// e imprimir en consola un reporte general de todo el inventario disponible.
-    /// </summary>
     public void MostrarCatalogoCompleto()
     {
         try
@@ -342,11 +337,6 @@ public class Menus
     }
 
 
-    /// <summary>
-    /// Despliega el submenú de búsquedas avanzadas y filtros para el catálogo mixto, permitiendo 
-    /// realizar coincidencias parciales por título o autor, búsquedas exactas por ISBN o DOI, 
-    /// y listados ordenados de forma alfabética o cronológica.
-    /// </summary>  
     public void MenuConsultasCatalogo()
     {
         bool volver = false;
@@ -403,7 +393,7 @@ public class Menus
                         while (true)
                         {
                             Console.Write("Ingrese el nombre del autor: ");
-                            filtroAutor = Console.ReadLine().Trim();
+                            filtroAutor = (Console.ReadLine() ?? "").Trim();
                             if (string.IsNullOrWhiteSpace(filtroAutor))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
@@ -424,7 +414,7 @@ public class Menus
                         while (true)
                         {
                             Console.Write("Ingrese el ISBN de 13 dígitos: ");
-                            isbnBuscado = Console.ReadLine().Trim();
+                            isbnBuscado = (Console.ReadLine() ?? "").Trim();
                             if (string.IsNullOrWhiteSpace(isbnBuscado))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
@@ -568,13 +558,22 @@ public class Menus
                                 break;
                             }
 
-                            if (isbn.Length != 13 || !isbn.All(char.IsDigit))
+                            if (isbn.Length != 13 || !isbn.All(char.IsDigit) || !isbn.StartsWith("978"))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos.\n");
+                                Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos .\n");
                                 Console.ResetColor();
                             }
                             else break;
+                        }
+
+                        if (_bookservice.BuscarPorISBN(isbn) != null)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\n[ERROR] Ya existe un libro registrado con este ISBN. Transacción abortada.");
+                            Console.ResetColor();
+                            _uiconsole.PresioneParaContinuar();
+                            break;
                         }
 
                         string titulo;
@@ -649,10 +648,10 @@ public class Menus
                         while (true)
                         {
                             Console.WriteLine("Ingrese el número de páginas:");
-                            if (!int.TryParse(Console.ReadLine(), out paginas) || paginas < 0)
+                            if (!int.TryParse(Console.ReadLine(), out paginas) || paginas <= 0)
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("[ERROR] El libro no puede tener páginas negativas.\n");
+                                Console.WriteLine("[ERROR] El libro no puede tener páginas negativas ni en cero.\n");
                                 Console.ResetColor();
                             }
                             else break;
@@ -703,12 +702,21 @@ public class Menus
                         break;
                     case 4:
                         Console.Clear();
-                        string isbnEliminar;
+                        string isbnEliminar = string.Empty;
+                        bool cancelarLibro = false;
                         while (true)
                         {
-                            Console.WriteLine("Ingrese el ISBN del libro a eliminar:");
-                            isbnEliminar = Console.ReadLine()?.Trim();
-                            if (string.IsNullOrWhiteSpace(isbnEliminar) || isbnEliminar.Length != 13 || !isbnEliminar.All(char.IsDigit))
+                            Console.WriteLine("Ingrese el ISBN del libro a eliminar (o Enter para cancelar):");
+                            isbnEliminar = (Console.ReadLine() ?? "").Trim();
+
+                            if (string.IsNullOrWhiteSpace(isbnEliminar))
+                            {
+                                Console.WriteLine("Operación cancelada.");
+                                cancelarLibro = true;
+                                break;
+                            }
+
+                            if (isbnEliminar.Length != 13 || !isbnEliminar.All(char.IsDigit))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos.\n");
@@ -716,6 +724,8 @@ public class Menus
                             }
                             else break;
                         }
+
+                        if (cancelarLibro) break;
 
                         _bookservice.EliminarBook(isbnEliminar);
                         Console.WriteLine($"\nLista Actualizada después de la eliminación del libro con ISBN {isbnEliminar}.");
@@ -787,6 +797,15 @@ public class Menus
                                 Console.ResetColor();
                             }
                             else break;
+                        }
+
+                        if (_ebookservice.Busqueda(doi) != null)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\n[ERROR] Ya existe un Ebook registrado con este DOI. Transacción abortada.");
+                            Console.ResetColor();
+                            _uiconsole.PresioneParaContinuar();
+                            break;
                         }
 
                         string titulo;
@@ -865,9 +884,11 @@ public class Menus
                         while (true)
                         {
                             Console.WriteLine("Ingrese el tamaño del archivo en MB (ej. 2.5):");
-                            if (!double.TryParse(Console.ReadLine(), out tamano) || tamano <= 0)
+                            if (!double.TryParse(Console.ReadLine(), out tamano) || tamano <= 0 || tamano > 200)
                             {
-                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("[ERROR] El tamaño debe ser un número positivo mayor a 0.\n"); Console.ResetColor();
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("[ERROR] El tamaño debe ser numérico y estar entre 0.1 y 200 MB.\n");
+                                Console.ResetColor();
                             }
                             else break;
                         }
@@ -926,13 +947,21 @@ public class Menus
 
                         break;
                     case 4:
-                        Console.Clear();
                         string doiEliminar;
+                        bool cancelarEbook = false;
                         while (true)
                         {
-                            Console.WriteLine("Ingrese el DOI del ebook a eliminar:");
-                            doiEliminar = Console.ReadLine()?.Trim();
-                            if (string.IsNullOrWhiteSpace(doiEliminar) || !doiEliminar.StartsWith("10.") || !doiEliminar.Contains("/"))
+                            Console.Write("Ingrese el DOI del ebook a eliminar (o Enter para cancelar): ");
+                            doiEliminar = (Console.ReadLine() ?? "").Trim();
+
+                            if (string.IsNullOrWhiteSpace(doiEliminar))
+                            {
+                                Console.WriteLine("Operación cancelada.");
+                                cancelarEbook = true;
+                                break;
+                            }
+
+                            if (!doiEliminar.StartsWith("10.") || !doiEliminar.Contains("/") || doiEliminar.EndsWith("/"))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("[ERROR] DOI inválido. Formato esperado ej. 10.1000/xyz123\n");
@@ -941,9 +970,12 @@ public class Menus
                             else break;
                         }
 
+                        if (cancelarEbook) break;
+
                         _ebookservice.EliminarEbook(doiEliminar);
-                        Console.WriteLine($"\nLista Actualizada después de la eliminación del ebook con DOI {doiEliminar}.");
-                        _uiconsole.MostrarEbooks(_ebookservice.ObtenerTodo());
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nEbook eliminado exitosamente.");
+                        Console.ResetColor();
                         _uiconsole.PresioneParaContinuar();
                         break;
                     case 5:
@@ -1050,19 +1082,28 @@ public class Menus
         {
             Console.Clear();
             Console.WriteLine("=== ACTUALIZAR USUARIO ===");
-            int id;
+            int idBusqueda;
             while (true)
             {
-                Console.Write("Ingrese el ID del usuario que desea modificar: ");
-                if (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                Console.Write("Ingrese el ID del usuario que desea modificar (o Enter para cancelar): ");
+                string entrada = (Console.ReadLine() ?? "").Trim();
+
+                // Salida de emergencia
+                if (string.IsNullOrWhiteSpace(entrada))
+                {
+                    Console.WriteLine("Operación cancelada.");
+                    return;
+                }
+
+                if (!int.TryParse(entrada, out idBusqueda) || idBusqueda <= 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("[ERROR] ID inválido. Debe ser un número mayor a 0.\n");
+                    Console.WriteLine("[ERROR] El ID debe ser un número entero positivo.\n");
                     Console.ResetColor();
                 }
                 else break;
             }
-            User usuario = _userservice.BuscarPorId(id);
+            User usuario = _userservice.BuscarPorId(idBusqueda);
 
             if (usuario == null)
             {
@@ -1357,7 +1398,7 @@ public class Menus
                         while (true)
                         {
                             Console.WriteLine("Ingrese el correo electrónico del usuario:");
-                            correo = Console.ReadLine().Trim();
+                            correo = (Console.ReadLine() ?? "").Trim();
 
                             if (string.IsNullOrWhiteSpace(correo) || !correo.Contains("@") || !correo.Contains("."))
                             {
@@ -1372,7 +1413,7 @@ public class Menus
                         while (true)
                         {
                             Console.WriteLine("Ingrese el teléfono del usuario (8 dígitos):");
-                            telefono = Console.ReadLine().Trim();
+                            telefono = (Console.ReadLine() ?? "").Trim();
 
                             bool esValido = !string.IsNullOrWhiteSpace(telefono) &&
                                             telefono.Length == 8 &&
@@ -1417,30 +1458,35 @@ public class Menus
 
                         break;
                     case 4:
-                        try
+                        int idEliminar = 0;
+                        bool cancelarUsuario = false;
+                        while (true)
                         {
-                            Console.Clear();
-                            int idEliminar;
-                            while (true)
+                            Console.Write("Ingrese el ID del usuario a eliminar (o Enter para cancelar): ");
+                            string entradaEliminar = (Console.ReadLine() ?? "").Trim();
+
+                            if (string.IsNullOrWhiteSpace(entradaEliminar))
                             {
-                                Console.WriteLine("Ingrese el ID del usuario a eliminar:");
-                                if (!int.TryParse(Console.ReadLine(), out idEliminar) || idEliminar <= 0)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("[ERROR] Debe ingresar un ID numérico válido mayor a 0.\n");
-                                    Console.ResetColor();
-                                }
-                                else break;
+                                Console.WriteLine("Operación cancelada.");
+                                cancelarUsuario = true;
+                                break;
                             }
 
-                            _userservice.EliminarUser(idEliminar);
-                            Console.WriteLine($"\nLista Actualizada después de la eliminación del usuario con ID {idEliminar}.");
-                            _uiconsole.MostrarUser(_userservice.ObtenerTodo());
+                            if (!int.TryParse(entradaEliminar, out idEliminar) || idEliminar <= 0)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("[ERROR] El ID debe ser un número entero positivo.\n");
+                                Console.ResetColor();
+                            }
+                            else break;
                         }
-                        catch (InvalidOperationException ex)
-                        {
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
+                        if (cancelarUsuario)
+                        { break; }
+
+                        _userservice.EliminarUser(idEliminar);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nUsuario eliminado exitosamente.");
+                        Console.ResetColor();
                         _uiconsole.PresioneParaContinuar();
                         break;
                     case 5:
@@ -1538,6 +1584,20 @@ public class Menus
                             _uiconsole.PresioneParaContinuar();
                             break;
                         }
+
+                        int prestamosActivos = _loanservice.ObtenerTodo()
+                            .Count(p => p.UsuarioID == idUsuario && !p.FechaDevolucionReal.HasValue);
+                        if (prestamosActivos >= 3)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"\n[SISTEMA BLOQUEADO] El usuario ya tiene {prestamosActivos} préstamos activos.");
+                            Console.WriteLine("Ha alcanzado el límite máximo permitido por la biblioteca.");
+                            Console.ResetColor();
+                            _uiconsole.PresioneParaContinuar();
+                            break;
+                        }
+
+
                         int tipoOpcion;
                         while (true)
                         {
@@ -1704,7 +1764,7 @@ public class Menus
             while (true)
             {
                 Console.Write("Ingrese el nombre o apellido a buscar: ");
-                termino = Console.ReadLine()?.Trim().ToLower();
+                termino = (Console.ReadLine() ?? "").Trim();
                 if (string.IsNullOrWhiteSpace(termino))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
