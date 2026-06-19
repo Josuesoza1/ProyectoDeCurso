@@ -1,4 +1,7 @@
-﻿public class Ebook : Catalog
+﻿/// <summary>
+/// Entidad que representa un libro electrónico o documento digital interactivo.
+/// </summary>
+public class Ebook : Catalog
 {
     private string _dOI = string.Empty;
     private string _formato = string.Empty;
@@ -6,26 +9,25 @@
     private string _urlDescarga = string.Empty;
     private string _idioma = string.Empty;
 
+    /// <summary>
+    /// Identificador de Objeto Digital (Digital Object Identifier) asignado al documento.
+    /// </summary>
     public string DOI
     {
         get => _dOI;
         private set
         {
             if (string.IsNullOrWhiteSpace(value))
-            {
                 throw new ArgumentException("El DOI no puede estar vacío.");
-            }
-
             if (!value.StartsWith("10.") || !value.Contains("/"))
-            {
                 throw new ArgumentException("El DOI es inválido. Debe empezar con '10.' y tener una barra '/'.");
-            }
-
             _dOI = value;
         }
     }
 
-
+    /// <summary>
+    /// Extensión digital o formato en el que se encuentra alojado (Ej: PDF, EPUB).
+    /// </summary>
     public string Formato
     {
         get => _formato;
@@ -38,6 +40,10 @@
             _formato = value.ToUpper();
         }
     }
+
+    /// <summary>
+    /// Espacio en Megabytes (MB) que consume el archivo en el servidor.
+    /// </summary>
     public double Tamano
     {
         get => _tamano;
@@ -48,6 +54,10 @@
             _tamano = value;
         }
     }
+
+    /// <summary>
+    /// Enlace o ruta de red donde se encuentra el archivo para su consumo.
+    /// </summary>
     public string? UrlDescarga
     {
         get => _urlDescarga;
@@ -58,6 +68,10 @@
             _urlDescarga = value;
         }
     }
+
+    /// <summary>
+    /// Idioma de traducción principal en el que está escrito el Ebook.
+    /// </summary>
     public string? Idioma
     {
         get => _idioma;
@@ -71,11 +85,11 @@
         }
     }
 
-
-    public Ebook( int iD, string dOI, string? titulo, string? autor, string? genero,
-        int anio, int cantidad, string formato, double tamano, 
-        string urlDescarga, string idioma) :
-        base(iD, titulo, autor, genero, anio, cantidad)
+    /// <summary>
+    /// Constructor principal del libro electrónico.
+    /// </summary>
+    public Ebook(int iD, string dOI, string? titulo, string? autor, string? genero, int anio, int cantidad, string formato, double tamano, string urlDescarga, string idioma)
+        : base(iD, titulo, autor, genero, anio, cantidad)
     {
         DOI = dOI;
         Formato = formato;
@@ -84,31 +98,15 @@
         Idioma = idioma;
     }
 
-
-    public void ActualizarURL(string nuevaURL)
-    {
-        UrlDescarga = nuevaURL;
-    }
-
-    public void ActualizarFormato(string nuevoFormato)
-    {
-        Formato = nuevoFormato;
-    }   
-
-    public void ActualizarIdioma(string nuevoIdioma)
-    {
-        Idioma = nuevoIdioma;
-    }
-
-    
+    public void ActualizarURL(string nuevaURL) => UrlDescarga = nuevaURL;
+    public void ActualizarFormato(string nuevoFormato) => Formato = nuevoFormato;
+    public void ActualizarIdioma(string nuevoIdioma) => Idioma = nuevoIdioma;
 
     public override string TipoItem() => "EBOOK";
 
     public override string ToString()
     {
-        
         string estado = Cantidad > 0 ? $"Disponible ({Cantidad} licencias)" : "Agotado / Prestado";
-
         return $" [EBOOK] ID: {ID}\n" +
                $"   Título  : {Titulo}\n" +
                $"   Autor   : {Autor}\n" +
@@ -118,4 +116,3 @@
                $"   {new string('-', 55)}";
     }
 }
-

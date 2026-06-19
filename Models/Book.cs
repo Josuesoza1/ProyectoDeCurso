@@ -1,26 +1,32 @@
-﻿public class Book : Catalog
+﻿/// <summary>
+/// Entidad que representa un libro físico, heredando los atributos comunes del catálogo.
+/// </summary>
+public class Book : Catalog
 {
     private string? _iSBN;
     private int _numeroDePaginas;
     private string? _editorial;
     private string? _estadoFisico;
 
+    /// <summary>
+    /// Código Internacional Normalizado para Libros de 13 dígitos.
+    /// </summary>
     public string? ISBN
     {
         get => _iSBN;
         private set
         {
             if (string.IsNullOrWhiteSpace(value))
-            {
                 throw new ArgumentException("El ISBN no puede estar vacío");
-            }
             if (value.Length != 13)
-            {
                 throw new ArgumentException("El ISBN Debe contener exactamente 13 digitos");
-            }
             _iSBN = value;
         }
     }
+
+    /// <summary>
+    /// Volumen o longitud del libro impreso en páginas.
+    /// </summary>
     public int NumeroDePaginas
     {
         get => _numeroDePaginas;
@@ -31,11 +37,19 @@
             _numeroDePaginas = value;
         }
     }
+
+    /// <summary>
+    /// Empresa o entidad responsable de la impresión y publicación de la obra.
+    /// </summary>
     public string? Editorial
     {
         get => _editorial;
         private set => _editorial = ValidarTexto(value, "editorial");
     }
+
+    /// <summary>
+    /// Condición material actual del libro.
+    /// </summary>
     public string? EstadoFisico
     {
         get => _estadoFisico;
@@ -48,7 +62,11 @@
             _estadoFisico = value;
         }
     }
-    public Book(int iD, string isbn, string? titulo, string? autor, string? genero, int anio, int cantidad, int numeroDePaginas, string? editorial, string estadoFisico = "Bueno") 
+
+    /// <summary>
+    /// Constructor principal del libro físico.
+    /// </summary>
+    public Book(int iD, string isbn, string? titulo, string? autor, string? genero, int anio, int cantidad, int numeroDePaginas, string? editorial, string estadoFisico = "Bueno")
         : base(iD, titulo, autor, genero, anio, cantidad)
     {
         ISBN = isbn;
@@ -57,19 +75,13 @@
         EstadoFisico = estadoFisico;
     }
 
-
-    public void ActualizarEditorial(string nuevoEditorial)
-    {
-        Editorial = nuevoEditorial;
-    }
-
+    public void ActualizarEditorial(string nuevoEditorial) => Editorial = nuevoEditorial;
 
     public override string TipoItem() => "LIBRO";
+
     public override string ToString()
     {
-        
         string estado = Cantidad > 0 ? $"Disponible ({Cantidad} copias en stock)" : "Agotado / Prestado";
-
         return $" [LIBRO] ID: {ID}\n" +
                $"   Título  : {Titulo}\n" +
                $"   Autor   : {Autor}\n" +
@@ -77,8 +89,5 @@
                $"   Físico  : {NumeroDePaginas} págs. | Estado: {EstadoFisico} | ISBN: {ISBN}\n" +
                $"   Estatus : {estado}\n" +
                $"   {new string('-', 55)}";
-
-        
     }
 }
-
