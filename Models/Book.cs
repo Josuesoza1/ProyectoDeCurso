@@ -18,10 +18,10 @@ public class Book : Catalog
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("El ISBN no puede estar vacío");
-            if (value.Length != 13)
-                throw new ArgumentException("El ISBN Debe contener exactamente 13 digitos");
             if (!value.StartsWith("978"))
                 throw new ArgumentException("El ISBN tiene que empezar con 978");
+            if (value.Length != 13)
+                throw new ArgumentException("El ISBN Debe contener exactamente 13 digitos");
             _iSBN = value;
         }
     }

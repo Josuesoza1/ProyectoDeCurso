@@ -21,7 +21,7 @@ public class Loan
         private set
         {
             if (value < 0)
-                throw new ArgumentException("El id no puede ser negativo");
+                throw new ArgumentException("El id invalido");
             _idPrestamo = value;
         }
     }

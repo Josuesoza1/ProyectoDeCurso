@@ -623,13 +623,21 @@ public class Menus
                             Console.WriteLine("Ingrese el ISBN de 13 dígitos del libro (o presione Enter para cancelar):");
                             isbn = Console.ReadLine()?.Trim();
 
-                            // Salida de emergencia
+
                             if (string.IsNullOrWhiteSpace(isbn)) break;
+
 
                             if (isbn.Length != 13 || !isbn.All(char.IsDigit))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
+
                                 Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos.\n");
+                                Console.ResetColor();
+                            }
+                            else if (!isbn.StartsWith("978"))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("[Error] El ISBN tiene que empezar con 978");
                                 Console.ResetColor();
                             }
                             else if (_bookservice.BuscarPorISBN(isbn) != null)
@@ -703,7 +711,7 @@ public class Menus
                         while (true)
                         {
                             Console.WriteLine("Ingrese el año de publicación:");
-                            if (!int.TryParse(Console.ReadLine(), out añoPublicacion) || añoPublicacion < 0 || añoPublicacion > DateTime.Now.Year)
+                            if (!int.TryParse(Console.ReadLine(), out añoPublicacion) || añoPublicacion < 1000 || añoPublicacion > DateTime.Now.Year)
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("[ERROR] Año inválido. Ingrese un año numérico lógico (no mayor al actual).\n");
@@ -810,6 +818,12 @@ public class Menus
                         if (cancelarLibro) break;
 
                         var libroeliminado = _bookservice.BuscarPorISBN(isbnEliminar);
+                        if (libroeliminado == null)
+                        {
+                            Console.WriteLine("El libro no existe en el catálogo.");
+                            _uiconsole.PresioneParaContinuar();
+                            break;
+                        }
                         _bookservice.EliminarBook(isbnEliminar);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Libro eliminado con exito");
@@ -894,7 +908,7 @@ public class Menus
                             else break;
                         }
 
-                        
+
                         if (string.IsNullOrWhiteSpace(doi))
                         {
                             Console.WriteLine("Operación cancelada.");
@@ -1073,7 +1087,7 @@ public class Menus
                         }
 
                         if (cancelarEbook) break;
-                        
+
                         _ebookservice.EliminarEbook(doiEliminar);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("\nEbook eliminado exitosamente.");
@@ -1347,6 +1361,12 @@ public class Menus
 
             Loan prestamo = _loanservice.BuscarPorId(id);
 
+            if (prestamo == null)
+            {
+                Console.WriteLine("No se encontró ningun prestamo con ese ID");
+                _uiconsole.PresioneParaContinuar();
+                return;
+            }
             Console.WriteLine("\nInformación actual del préstamo:");
             Console.WriteLine(prestamo.ToString());
 
@@ -1755,8 +1775,7 @@ public class Menus
                         string tipoItem = "";
 
                         bool yaTieneElItem = _loanservice.ObtenerTodo()
-    .Any(p => p.UsuarioID == idUsuario && p.ItemID == idItem && p.TipoItem == tipoItem && !p.FechaDevolucionReal.HasValue);
-
+.Any(p => p.UsuarioID == idUsuario && p.ItemID == idItem && p.TipoItem == tipoItem && !p.FechaDevolucionReal.HasValue);
                         if (yaTieneElItem)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;

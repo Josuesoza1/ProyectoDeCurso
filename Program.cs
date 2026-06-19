@@ -3,25 +3,25 @@
 
 
     IBookRepository bookRepository = new BookJsonRepository(@"Book/Book.json");
-    BookService service = new BookService(bookRepository);
+    BookService bookService = new BookService(bookRepository);
 
     IEbookRepository ebookRepository = new EbookJsonRepository(@"Ebook/Ebook.json");
-    EbookService service1 = new EbookService(ebookRepository);
+    EbookService ebookService = new EbookService(ebookRepository);
 
     ILoanRepository loanRepository = new LoanJsonRepository(@"Loan/Loan.json");
-    LoanService service2 = new LoanService(loanRepository);
+    LoanService loanService = new LoanService(loanRepository);
 
     IUserRepository userRepository = new UserJsonRepository(@"User/User.json");
-    UserService service3 = new UserService(userRepository);
+    UserService userService = new UserService(userRepository);
 
     UiConsole uiConsole = new UiConsole();
 
-    Menus menu = new Menus(service, service1, service2, service3, uiConsole);
+    Menus menu = new Menus(bookService, ebookService, loanService, userService, uiConsole);
 
-    LibrarySystem prueba = new LibrarySystem(menu);
+    LibrarySystem Biblioteca = new LibrarySystem(menu);
 
 
-    prueba.Iniciar();
+    Biblioteca.Iniciar();
 
 
 
