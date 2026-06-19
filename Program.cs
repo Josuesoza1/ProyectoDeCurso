@@ -35,6 +35,10 @@ catch (DirectoryNotFoundException)
 {
     Console.WriteLine("La ruta especificada no es válida.");
 }
+catch (System.Text.Json.JsonException ex)
+{
+    Console.WriteLine($"[ERROR CRÍTICO] La base de datos JSON está corrupta. {ex.Message}");
+}
 catch (UnauthorizedAccessException)
 {
     Console.WriteLine("No posee los permisos suficientes.");

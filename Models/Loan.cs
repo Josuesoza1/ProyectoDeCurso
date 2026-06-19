@@ -145,12 +145,16 @@ public class Loan
         return texto.Trim();
     }
 
+    /// <summary>
+    /// Metodo heredado para mostrar toda la informacion
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
         string devolucion = FechaDevolucionReal.HasValue ? $"¡Entregado el {FechaDevolucionReal.Value:dd/MM/yyyy}!" : "Pendiente (No devuelto aún)";
         string alerta = EstaVencido ? " ¡ATENCIÓN: VENCIDO!" : "";
         return $" PRÉSTAMO #{IdPrestamo}\n" +
-               $"   Usuario ID: {UsuarioID,-6} | Ítem ID: {ItemID} ({TipoItem})\n" +
+               $"   Usuario ID: {UsuarioID,-5} | Ítem ID: {ItemID} ({TipoItem})\n" +
                $"   Fechas    : Prestado el {FechaPrestamo:dd/MM/yyyy} -> Vence el {FechaDevolucionEsperada:dd/MM/yyyy}\n" +
                $"   Devolución: {devolucion}\n" +
                $"   Estado    : {Estado.ToUpper()}{alerta}\n" +

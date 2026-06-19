@@ -86,13 +86,21 @@ public class UiConsole
         Console.WriteLine("║            SISTEMA DE GESTIÓN DE BIBLIOTECA              ║");
         Console.WriteLine("╚══════════════════════════════════════════════════════════╝");
         Console.ForegroundColor = ConsoleColor.DarkGray;
-        Console.WriteLine($" [Libros: {totalLibros} | Ebooks: {totalEbooks}]  [Lectores: {totalUsuarios}]  [Historial Préstamos: {totalPrestamos}]");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("╔════════════════════════════════════════════════════════════════╗");
+        Console.WriteLine($"║[Libros: {totalLibros} | Ebooks: {totalEbooks}]  [Lectores: {totalUsuarios}]  [Historial Préstamos: {totalPrestamos}]║ ");
+        Console.WriteLine("╚════════════════════════════════════════════════════════════════╝");
         Console.ResetColor();
-        Console.WriteLine("\n1. Gestión de Catálogo (Libros/Ebooks)");
-        Console.WriteLine("2. Gestión de Usuarios");
-        Console.WriteLine("3. Gestión de Préstamos");
-        Console.WriteLine("4. Consultar reportes generales");
-        Console.WriteLine("5. Salir");
+        Console.ResetColor();
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("╔═════════════════════════════════════════════╗");
+        Console.WriteLine("║   1. Gestión de Catálogo (Libros/Ebooks)    ║");
+        Console.WriteLine("║   2. Gestión de Usuarios                    ║");
+        Console.WriteLine("║   3. Gestión de Préstamos                   ║");
+        Console.WriteLine("║   4. Consultar reportes generales           ║");
+        Console.WriteLine("║   5. Salir                                  ║");
+        Console.WriteLine("╚═════════════════════════════════════════════╝");
+        Console.ResetColor();
     }
 
     /// <summary>
@@ -101,30 +109,44 @@ public class UiConsole
     public void MenuGestionCatalogo()
     {
         Console.Clear();
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("=== GESTIÓN DE CATÁLOGO ===");
-        Console.ResetColor();
-        Console.WriteLine("1. Administrar Libros Físicos ");
-        Console.WriteLine("2. Administrar Libros Electrónicos / Ebooks");
-        Console.WriteLine("3. Listar Todo el Catálogo Registrado");
-        Console.WriteLine("4. Motor de Búsquedas, Filtros y Ordenamientos Avanzados");
-        Console.WriteLine("5. Volver al menú principal");
-    }
 
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║             GESTIÓN DE CATÁLOGO              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║   1. Administrar Libros Físicos              ║");
+        Console.WriteLine("║   2. Administrar Libros Electrónicos/Ebooks  ║");
+        Console.WriteLine("║   3. Listar Todo el Catálogo                 ║");
+        Console.WriteLine("║   4. Búsquedas y Filtros Avanzados           ║");
+        Console.WriteLine("║   5. Volver al Menú Principal                ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+        Console.ResetColor();
+    }
     /// <summary>
     /// Renderiza el submenú de administración de libros físicos.
     /// </summary>
     public void MenuLibros()
     {
         Console.Clear();
+
         Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("=== GESTIÓN DE LIBROS ===");
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║              GESTIÓN DE LIBROS               ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║      1. Agregar Libro                        ║");
+        Console.WriteLine("║      2. Listar Libros                        ║");
+        Console.WriteLine("║      3. Actualizar Libro                     ║");
+        Console.WriteLine("║      4. Eliminar Libro                       ║");
+        Console.WriteLine("║      5. Volver al Menú Anterior              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
         Console.ResetColor();
-        Console.WriteLine("1. Agregar Libro");
-        Console.WriteLine("2. Listar Libros");
-        Console.WriteLine("3. Actualizar Libro");
-        Console.WriteLine("4. Eliminar Libro");
-        Console.WriteLine("5. Volver al menú anterior");
     }
 
     /// <summary>
@@ -133,31 +155,46 @@ public class UiConsole
     public void MenuEbooks()
     {
         Console.Clear();
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("=== GESTIÓN DE EBOOKS ===");
-        Console.ResetColor();
-        Console.WriteLine("1. Agregar Ebook");
-        Console.WriteLine("2. Listar Ebooks");
-        Console.WriteLine("3. Actualizar Ebook");
-        Console.WriteLine("4. Eliminar Ebook");
-        Console.WriteLine("5. Volver al menú anterior");
-    }
 
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║              GESTIÓN DE EBOOKS               ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║      1. Agregar Ebook                        ║");
+        Console.WriteLine("║      2. Listar Ebooks                        ║");
+        Console.WriteLine("║      3. Actualizar Ebook                     ║");
+        Console.WriteLine("║      4. Eliminar Ebook                       ║");
+        Console.WriteLine("║      5. Volver al Menú Anterior              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ResetColor();
+    }
     /// <summary>
     /// Renderiza el submenú de administración de usuarios.
     /// </summary>
     public void MostrarMenuUsuarios()
     {
         Console.Clear();
+
         Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("=== GESTIÓN DE USUARIOS ===");
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║             GESTIÓN DE USUARIOS              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║     1. Agregar Usuario                       ║");
+        Console.WriteLine("║     2. Listar Usuarios                       ║");
+        Console.WriteLine("║     3. Actualizar Usuario                    ║");
+        Console.WriteLine("║     4. Eliminar Usuario                      ║");
+        Console.WriteLine("║     5. Consultas y Filtros                   ║");
+        Console.WriteLine("║     6. Volver al Menú Principal              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
         Console.ResetColor();
-        Console.WriteLine("1. Agregar Usuario");
-        Console.WriteLine("2. Listar Usuarios");
-        Console.WriteLine("3. Actualizar Usuario");
-        Console.WriteLine("4. Eliminar Usuario");
-        Console.WriteLine("5. Consultas, Filtros y Ordenamientos");
-        Console.WriteLine("6. Volver al menú principal");
     }
 
     /// <summary>
@@ -166,28 +203,43 @@ public class UiConsole
     public void MostrarMenuPrestamos()
     {
         Console.Clear();
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("=== GESTIÓN DE PRÉSTAMOS ===");
-        Console.ResetColor();
-        Console.WriteLine("1. Agregar Préstamo");
-        Console.WriteLine("2. Listar Préstamos");
-        Console.WriteLine("3. Registrar Devolución / Editar Préstamo");
-        Console.WriteLine("4. Consultas y Filtros Avanzados");
-        Console.WriteLine("5. Volver al menú principal");
-    }
 
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║            GESTIÓN DE PRÉSTAMOS              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║     1. Registrar Préstamo                    ║");
+        Console.WriteLine("║     2. Listar Préstamos                      ║");
+        Console.WriteLine("║     3. Registrar Devolución                  ║");
+        Console.WriteLine("║     4. Consultas y Filtros                   ║");
+        Console.WriteLine("║     5. Volver al Menú Principal              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ResetColor();
+    }
     /// <summary>
     /// Renderiza el menú de reportes consolidados del sistema.
     /// </summary>
     public void MenuConsultasGlobales()
     {
         Console.Clear();
+
         Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("═══ MENÚ DE REPORTES CONSOLIDADOS ═══");
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║          REPORTES CONSOLIDADOS               ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║     1. Resumen General del Catálogo          ║");
+        Console.WriteLine("║     2. Préstamos Activos                     ║");
+        Console.WriteLine("║     3. Préstamos Vencidos                    ║");
+        Console.WriteLine("║     4. Volver al Menú Principal              ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
         Console.ResetColor();
-        Console.WriteLine("1. Resumen General del Catálogo (Físico y Digital)");
-        Console.WriteLine("2. Listado de Préstamos Activos (Vigentes)");
-        Console.WriteLine("3. Listado de Préstamos Vencidos (Morosos)");
-        Console.WriteLine("4. Volver al menú principal");
     }
 }

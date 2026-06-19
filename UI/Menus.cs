@@ -546,25 +546,32 @@
                         string isbn;
                         while (true)
                         {
-                            Console.WriteLine("Ingrese el ISBN de 13 dígitos del libro (Presione Enter para autogenerar):");
+                            Console.WriteLine("Ingrese el ISBN de 13 dígitos del libro (o presione Enter para cancelar):");
                             isbn = Console.ReadLine()?.Trim();
 
-                            if (string.IsNullOrWhiteSpace(isbn))
-                            {
-                                isbn = "978" + new Random().Next(100000000, 999999999).ToString() + "1";
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.WriteLine($"[Sistema] ISBN autogenerado para pruebas: {isbn}\n");
-                                Console.ResetColor();
-                                break;
-                            }
+                            // Salida de emergencia
+                            if (string.IsNullOrWhiteSpace(isbn)) break;
 
-                            if (isbn.Length != 13 || !isbn.All(char.IsDigit) || !isbn.StartsWith("978"))
+                            if (isbn.Length != 13 || !isbn.All(char.IsDigit))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos .\n");
+                                Console.WriteLine("[ERROR] El ISBN debe contener exactamente 13 dígitos numéricos.\n");
+                                Console.ResetColor();
+                            }
+                            else if (_bookservice.BuscarPorISBN(isbn) != null)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("[ERROR] Ya existe un libro registrado con este ISBN. Transacción abortada.\n");
                                 Console.ResetColor();
                             }
                             else break;
+                        }
+
+
+                        if (string.IsNullOrWhiteSpace(isbn))
+                        {
+                            Console.WriteLine("Operación cancelada.");
+                            break;
                         }
 
                         if (_bookservice.BuscarPorISBN(isbn) != null)
@@ -788,15 +795,32 @@
                         string doi;
                         while (true)
                         {
-                            Console.WriteLine("Ingrese el DOI (Debe empezar con '10.' y contener '/'):");
+                            Console.WriteLine("Ingrese el DOI (Debe empezar con '10.' y contener '/') o presione Enter para cancelar:");
                             doi = Console.ReadLine()?.Trim();
-                            if (string.IsNullOrWhiteSpace(doi) || !doi.StartsWith("10.") || !doi.Contains("/"))
+
+                            if (string.IsNullOrWhiteSpace(doi)) break;
+
+
+                            if (!doi.StartsWith("10.") || !doi.Contains("/") || doi.EndsWith("/"))
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("[ERROR] DOI inválido. Formato esperado ej. 10.1000/xyz123\n");
                                 Console.ResetColor();
                             }
+                            else if (_ebookservice.Busqueda(doi) != null)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("[ERROR] Ya existe un Ebook registrado con este DOI. Transacción abortada.\n");
+                                Console.ResetColor();
+                            }
                             else break;
+                        }
+
+                        // Aborta el case 1 completo si el usuario presionó Enter
+                        if (string.IsNullOrWhiteSpace(doi))
+                        {
+                            Console.WriteLine("Operación cancelada.");
+                            break;
                         }
 
                         if (_ebookservice.Busqueda(doi) != null)
@@ -1368,16 +1392,25 @@
                         string nombre;
                         while (true)
                         {
+                            Console.WriteLine("Ingrese el nombre del usuario (o presione Enter para cancelar):");
+                            nombre = (Console.ReadLine() ?? "").Trim();
 
-                            Console.WriteLine("Ingrese el nombre del usuario:");
-                            nombre = Console.ReadLine()?.Trim();
-                            if (string.IsNullOrWhiteSpace(nombre))
+                            if (string.IsNullOrWhiteSpace(nombre)) break;
+
+                            if (nombre.Length < 2)
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("[Error] El nombre no puede estar vacío");
+                                Console.WriteLine("[ERROR] El nombre es muy corto.\n");
                                 Console.ResetColor();
                             }
                             else break;
+                        }
+
+
+                        if (string.IsNullOrWhiteSpace(nombre))
+                        {
+                            Console.WriteLine("Operación cancelada.");
+                            break;
                         }
                         string apellido;
                         while (true)
@@ -1551,14 +1584,30 @@
                         int idUsuario;
                         while (true)
                         {
-                            Console.Write("Ingrese el ID del Usuario: ");
-                            if (!int.TryParse(Console.ReadLine(), out idUsuario) || idUsuario <= 0)
+                            Console.Write("Ingrese el ID del usuario (o presione Enter para cancelar): ");
+                            string entrada = (Console.ReadLine() ?? "").Trim();
+
+
+                            if (string.IsNullOrWhiteSpace(entrada))
+                            {
+                                idUsuario = -1;
+                                break;
+                            }
+
+                            if (!int.TryParse(entrada, out idUsuario) || idUsuario <= 0)
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("[ERROR] ID inválido. Debe ser numérico y mayor a 0.\n");
+                                Console.WriteLine("[ERROR] El ID debe ser un número entero positivo.\n");
                                 Console.ResetColor();
                             }
                             else break;
+                        }
+
+
+                        if (idUsuario == -1)
+                        {
+                            Console.WriteLine("Operación cancelada.");
+                            break;
                         }
 
                         var usuario = _userservice.BuscarPorId(idUsuario);
@@ -1597,7 +1646,6 @@
                             break;
                         }
 
-
                         int tipoOpcion;
                         while (true)
                         {
@@ -1614,7 +1662,7 @@
                             else break;
                         }
 
-                        int idItem;
+                        int idItem = 0;
                         while (true)
                         {
                             Console.Write("Ingrese el ID del artículo: ");
@@ -1627,6 +1675,20 @@
                             else break;
                         }
                         string tipoItem = "";
+
+                        bool yaTieneElItem = _loanservice.ObtenerTodo()
+    .Any(p => p.UsuarioID == idUsuario && p.ItemID == idItem && p.TipoItem == tipoItem && !p.FechaDevolucionReal.HasValue);
+
+                        if (yaTieneElItem)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\n[ERROR] Transacción denegada: El usuario ya tiene una copia de este mismo artículo en su poder.");
+                            Console.ResetColor();
+                            _uiconsole.PresioneParaContinuar();
+                            break;
+                        }
+
+
                         Catalog itemAPrestar = null;
 
                         if (tipoOpcion == 1)
@@ -1764,7 +1826,7 @@
             while (true)
             {
                 Console.Write("Ingrese el nombre o apellido a buscar: ");
-                termino = (Console.ReadLine() ?? "").Trim();
+                termino = (Console.ReadLine() ?? "").Trim().ToLower();
                 if (string.IsNullOrWhiteSpace(termino))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
